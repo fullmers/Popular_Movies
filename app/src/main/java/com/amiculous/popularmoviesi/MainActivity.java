@@ -1,14 +1,13 @@
 package com.amiculous.popularmoviesi;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+
+import com.amiculous.popularmoviesi.utils.NetworkUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,8 +16,9 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        String sortOrder = getSortOrderPreference();
-        Log.d("sortOrder", sortOrder);
+        NetworkUtils.buildUrl(this);
+//        String sortOrder = getSortOrderPreference();
+ //       Log.d("sortOrder", sortOrder);
     }
 
     @Override
@@ -38,10 +38,10 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private String getSortOrderPreference() {
+  /*  private String getSortOrderPreference() {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
         String keyForSortOrder = getString(R.string.pref_sort_by_key);
         String defaultSortOrder = getString(R.string.pref_sort_by_popularity);
         return sp.getString(keyForSortOrder, defaultSortOrder);
-    }
+    }*/
 }
