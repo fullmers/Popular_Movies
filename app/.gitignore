@@ -1,1 +1,4 @@
 /build
+
+#apikey
+src/main/res/values/secrets.xml
