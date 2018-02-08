@@ -1,7 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/settings_fragment_container"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:name="com.amiculous.popularmoviesi.SettingsFragment"
-    android:id="@+id/sort_by_settings_fragment">
-</fragment>
+    android:layout_height="match_parent"/>
+
+<!-- using fragment as the root view creates a strange error, so went with FrameLayout and
+    adding it with the fragment manager.
+    The error was:
+    "android.view.InflateException: Binary XML file: Error inflating class fragment"
+<fragment
+    class="com.amiculous.popularmoviesi.SettingsFragment"
+    android:id="@+id/sort_by_settings_fragment"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+</fragment> -->
