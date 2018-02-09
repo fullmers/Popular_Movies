@@ -5,11 +5,11 @@ package com.amiculous.popularmoviesi;
  */
 
 public class Movie {
-    
+
     private int voteCount;
     private int id;
     private boolean isVideo;
-    private int voteAverage;
+    private double voteAverage;
     private String title;
     private double popularity;
     private String posterPath;
@@ -21,7 +21,7 @@ public class Movie {
     private String overview;
     private String releaseDate;
 
-    public Movie(int voteCount, int id, boolean isVideo, int voteAverage, String title, double popularity, String posterPath, String originalLanguage, String originalTitle, int[] genreIds, String backdropPath, boolean isAdult, String overview, String releaseDate) {
+    public Movie(int voteCount, int id, boolean isVideo, double voteAverage, String title, double popularity, String posterPath, String originalLanguage, String originalTitle, int[] genreIds, String backdropPath, boolean isAdult, String overview, String releaseDate) {
         this.voteCount = voteCount;
         this.id = id;
         this.isVideo = isVideo;
@@ -50,7 +50,7 @@ public class Movie {
         return isVideo;
     }
 
-    public int getVoteAverage() {
+    public double getVoteAverage() {
         return voteAverage;
     }
 
