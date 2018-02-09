@@ -19,4 +19,9 @@
     <string name="pref_sort_by_popularity" translatable="false">popularity</string>
     <string name="pref_sort_by_rating" translatable="false">rating</string>
 
+    <!-- ******************* MovieDetails strings ******************* -->
+    <!-- Label for the sort by preference -->
+    <string name="min">min</string>
+    <string name="out_of_ten">/10</string>
+
 </resources>
