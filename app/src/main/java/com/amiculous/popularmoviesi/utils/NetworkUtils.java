@@ -23,8 +23,8 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
-    private static final String SORT_BY_POPULARITY = "https://api.themoviedb.org/3/movie/popular/";
-    private static final String SORT_BY_TOP_RATED = "https://api.themoviedb.org/3/movie/top_rated/";
+    private static final String SORT_BY_POPULARITY = "https://api.themoviedb.org/3/movie/popular";
+    private static final String SORT_BY_TOP_RATED = "https://api.themoviedb.org/3/movie/top_rated";
 
     public static URL buildUrl(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -37,11 +37,11 @@ public class NetworkUtils {
         String apiKeyValue = context.getString(R.string.api_key);
         if (sortOrder.equals(context.getString(R.string.pref_sort_by_popularity))) {
             movieQueryUri = Uri.parse(SORT_BY_POPULARITY).buildUpon()
-                    .appendQueryParameter(apiKeyLabel,apiKeyValue)
+                    .appendQueryParameter(apiKeyLabel, apiKeyValue)
                     .build();
         } else {
             movieQueryUri = Uri.parse(SORT_BY_TOP_RATED).buildUpon()
-                    .appendQueryParameter(apiKeyLabel,apiKeyValue)
+                    .appendQueryParameter(apiKeyLabel, apiKeyValue)
                     .build();
         }
 
@@ -65,16 +65,13 @@ public class NetworkUtils {
             scanner.useDelimiter("\\A");
 
             boolean hasInput = scanner.hasNext();
-            String response = null;
             if (hasInput) {
-                response = scanner.next();
+                return scanner.next();
+            } else {
+                return null;
             }
-            scanner.close();
-            return response;
         } finally {
             urlConnection.disconnect();
         }
     }
-
-
 }
