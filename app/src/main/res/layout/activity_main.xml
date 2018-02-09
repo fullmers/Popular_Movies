@@ -8,7 +8,7 @@
     tools:context="com.amiculous.popularmoviesi.MainActivity">
 
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvNumbers"
+        android:id="@+id/rvMovies"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
