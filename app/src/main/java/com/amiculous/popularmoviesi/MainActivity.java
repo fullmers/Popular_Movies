@@ -2,23 +2,27 @@ package com.amiculous.popularmoviesi;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.amiculous.popularmoviesi.utils.NetworkUtils;
+import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>{
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+    private static final int ID_MOVIE_LOADER = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        NetworkUtils.buildUrl(this);
-//        String sortOrder = getSortOrderPreference();
- //       Log.d("sortOrder", sortOrder);
+        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
     }
 
     @Override
@@ -38,10 +42,23 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-  /*  private String getSortOrderPreference() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String keyForSortOrder = getString(R.string.pref_sort_by_key);
-        String defaultSortOrder = getString(R.string.pref_sort_by_popularity);
-        return sp.getString(keyForSortOrder, defaultSortOrder);
-    }*/
+    @Override
+    public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
+        if (id == ID_MOVIE_LOADER) {
+            return new MovieLoader(this);
+        } else return null;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
+        for (Movie movie: movies) {
+            String title = movie.getTitle();
+            Log.d(TAG,title);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
+
+    }
 }
