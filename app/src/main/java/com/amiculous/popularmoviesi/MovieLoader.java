@@ -21,19 +21,18 @@ public class MovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
     private static final String TAG = MovieLoader.class.getSimpleName();
 
     private ArrayList<Movie> mMovies;
-    private Context mContext;
+    private URL mUrl;
 
     public MovieLoader(Context context) {
         super(context);
-        mContext = context;
+        mUrl = NetworkUtils.buildUrl(context);
     }
 
     @Nullable
     @Override
     public ArrayList<Movie> loadInBackground() {
-        URL url = NetworkUtils.buildUrl(mContext);
         try {
-            String response = NetworkUtils.getResponseFromHttpUrl(url);
+            String response = NetworkUtils.getResponseFromHttpUrl(mUrl);
             return JsonUtils.getMoviesFromJson(response);
         } catch (IOException e) {
             Log.d(TAG,e.toString());
