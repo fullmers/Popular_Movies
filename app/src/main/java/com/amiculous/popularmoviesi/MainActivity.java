@@ -15,21 +15,23 @@ import android.view.MenuItem;
 
 import java.util.ArrayList;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
 MovieAdapter.MovieClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ID_MOVIE_LOADER = 0;
+    private int mScreenWidthPx;
 
-    RecyclerView mMovieRecyclerView;
-    MovieAdapter mAdapter;
-    int mScreenWidthPx;
-
+    @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mMovieRecyclerView = (RecyclerView) findViewById(R.id.rvMovies);
+        ButterKnife.bind(this);
         getScreenWidthPx();
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
     }
@@ -66,7 +68,7 @@ MovieAdapter.MovieClickListener{
         }
         int numberOfColumns = 2;
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
+        MovieAdapter mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
         mMovieRecyclerView.setAdapter(mAdapter);
     }
 
