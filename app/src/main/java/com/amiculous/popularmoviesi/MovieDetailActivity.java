@@ -2,7 +2,7 @@ package com.amiculous.popularmoviesi;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -14,6 +14,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
+    @BindView(R.id.text_release_date) TextView TvReleaseDate;
+    @BindView(R.id.text_user_rating) TextView TvUserRating;
+    @BindView(R.id.text_overview) TextView TvOverview;
+
+    @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,9 +28,21 @@ public class MovieDetailActivity extends AppCompatActivity {
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-            mMovie = (Movie) extras.getParcelable(getString(R.string.movie_extra_key));
-            TvMovieTitle.setText(mMovie.getTitle());
-            Log.d(TAG,mMovie.getTitle());
+            mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
+            setupUI();
         }
+    }
+
+    private void setupUI() {
+        TvMovieTitle.setText(mMovie.getTitle());
+        TvReleaseDate.setText(getReleaseYear());
+        TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
+        TvOverview.setText(mMovie.getOverview());
+    }
+
+    private String getReleaseYear() {
+        String fullDateString = mMovie.getReleaseDate();
+        String[] parts = fullDateString.split("-");
+        return parts[0];
     }
 }
