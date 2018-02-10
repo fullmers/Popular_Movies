@@ -8,10 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -26,6 +27,7 @@ MovieAdapter.MovieClickListener{
     private int mScreenWidthPx;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
+    @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,16 +58,14 @@ MovieAdapter.MovieClickListener{
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         if (id == ID_MOVIE_LOADER) {
+            mProgressSpinner.setVisibility(View.VISIBLE);
             return new MovieLoader(this);
         } else return null;
     }
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
-        for (Movie movie: movies) {
-            String title = movie.getTitle();
-            Log.d(TAG,title);
-        }
+        mProgressSpinner.setVisibility(View.GONE);
         int numberOfColumns = 2;
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         MovieAdapter mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
