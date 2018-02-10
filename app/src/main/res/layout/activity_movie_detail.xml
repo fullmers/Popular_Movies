@@ -41,28 +41,11 @@
             tools:text="2015" />
 
         <TextView
-            android:id="@+id/text_length"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_release_date"
-            tools:text="120" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="5sp"
-            android:layout_marginStart="5sp"
-            android:text="@string/min"
-            app:layout_constraintStart_toEndOf="@id/text_length"
-            app:layout_constraintTop_toBottomOf="@id/text_release_date" />
-
-        <TextView
             android:id="@+id/text_user_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_length"
+            app:layout_constraintTop_toBottomOf="@id/text_release_date"
             tools:text="8.3" />
 
         <TextView
@@ -70,7 +53,7 @@
             android:layout_height="wrap_content"
             android:text="@string/out_of_ten"
             app:layout_constraintStart_toEndOf="@id/text_user_rating"
-            app:layout_constraintTop_toBottomOf="@id/text_length" />
+            app:layout_constraintTop_toBottomOf="@id/text_release_date" />
 
     </android.support.constraint.ConstraintLayout>
 
