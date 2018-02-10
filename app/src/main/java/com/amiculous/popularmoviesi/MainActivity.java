@@ -74,6 +74,8 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public void onMovieClick(Movie movie) {
-        Log.d(TAG, "You clicked " + movie.getTitle());
+        Intent movieDetailIntent = new Intent(MainActivity.this,MovieDetailActivity.class);
+        movieDetailIntent.putExtra(getString(R.string.movie_extra_key),movie);
+        startActivity(movieDetailIntent);
     }
 }
