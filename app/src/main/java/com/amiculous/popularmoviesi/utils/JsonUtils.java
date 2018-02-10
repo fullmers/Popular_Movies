@@ -21,16 +21,13 @@ public class JsonUtils {
     private static final String RESULTS = "results";
     private static final String VOTE_COUNT = "vote_count";
     private static final String ID = "id";
-    private static final String VIDEO = "video";
     private static final String VOTE_AVERAGE = "vote_average";
     private static final String TITLE = "title";
     private static final String POPULARITY = "popularity";
     private static final String POSTER_PATH = "poster_path";
     private static final String ORIGINAL_LANGUAGE = "original_language";
     private static final String ORIGINAL_TITLE = "original_title";
-    private static final String GENRE_IDS = "genre_ids";
     private static final String BACKDDROP_PATH = "backdrop_path";
-    private static final String ADULT = "adult";
     private static final String OVERVIEW = "overview";
     private static final String RELEASE_DATE = "release_date";
 
@@ -45,27 +42,18 @@ public class JsonUtils {
                 JSONObject movie = resultsArray.getJSONObject(i);
                 int voteCount = movie.optInt(VOTE_COUNT);
                 int id = movie.optInt(ID);
-                boolean isVideo = movie.optBoolean(VIDEO);
                 double voteAverage = movie.optDouble(VOTE_AVERAGE);
                 String title = movie.optString(TITLE);
                 double popularity = movie.optDouble(POPULARITY);
                 String posterPath = movie.optString(POSTER_PATH);
                 String originalLanguage = movie.optString(ORIGINAL_LANGUAGE);
                 String originalTitle = movie.optString(ORIGINAL_TITLE);
-                JSONArray genreIdsJSON = movie.getJSONArray(GENRE_IDS);
                 String backdropPath = movie.optString(BACKDDROP_PATH);
-                boolean isAdult = movie.optBoolean(ADULT);
                 String overview = movie.optString(OVERVIEW);
                 String releaseDate = movie.optString(RELEASE_DATE);
 
-                int numGenres = genreIdsJSON.length();
-                int[] genreIds = new int[numGenres];
-                for (int j = 0; j < numGenres; j++) {
-                    genreIds[j] = genreIdsJSON.getInt(j);
-                }
-
-                Movie thisMovie = new Movie(voteCount, id, isVideo, voteAverage, title, popularity, posterPath,
-                originalLanguage, originalTitle, genreIds, backdropPath, isAdult, overview, releaseDate);
+                Movie thisMovie = new Movie(voteCount, id, voteAverage, title, popularity, posterPath,
+                originalLanguage, originalTitle, backdropPath, overview, releaseDate);
                 movies.add(thisMovie);
             }
 

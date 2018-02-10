@@ -1,39 +1,36 @@
 package com.amiculous.popularmoviesi;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by sarah on 09/02/2018.
  */
 
-public class Movie {
+public class Movie implements Parcelable {
 
     private int voteCount;
     private int id;
-    private boolean isVideo;
     private double voteAverage;
     private String title;
     private double popularity;
     private String posterPath;
     private String originalLanguage;
     private String originalTitle;
-    private int[] genreIds;
     private String backdropPath;
-    private boolean isAdult;
     private String overview;
     private String releaseDate;
 
-    public Movie(int voteCount, int id, boolean isVideo, double voteAverage, String title, double popularity, String posterPath, String originalLanguage, String originalTitle, int[] genreIds, String backdropPath, boolean isAdult, String overview, String releaseDate) {
+    public Movie(int voteCount, int id, double voteAverage, String title, double popularity, String posterPath, String originalLanguage, String originalTitle, String backdropPath, String overview, String releaseDate) {
         this.voteCount = voteCount;
         this.id = id;
-        this.isVideo = isVideo;
         this.voteAverage = voteAverage;
         this.title = title;
         this.popularity = popularity;
         this.posterPath = posterPath;
         this.originalLanguage = originalLanguage;
         this.originalTitle = originalTitle;
-        this.genreIds = genreIds;
         this.backdropPath = backdropPath;
-        this.isAdult = isAdult;
         this.overview = overview;
         this.releaseDate = releaseDate;
     }
@@ -44,10 +41,6 @@ public class Movie {
 
     public int getId() {
         return id;
-    }
-
-    public boolean isVideo() {
-        return isVideo;
     }
 
     public double getVoteAverage() {
@@ -74,16 +67,8 @@ public class Movie {
         return originalTitle;
     }
 
-    public int[] getGenreIds() {
-        return genreIds;
-    }
-
     public String getBackdropPath() {
         return backdropPath;
-    }
-
-    public boolean isAdult() {
-        return isAdult;
     }
 
     public String getOverview() {
@@ -93,5 +78,52 @@ public class Movie {
     public String getReleaseDate() {
         return releaseDate;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeInt(voteCount);
+        parcel.writeInt(id);
+        parcel.writeDouble(voteAverage);
+        parcel.writeString(title);
+        parcel.writeDouble(popularity);
+        parcel.writeString(posterPath);
+        parcel.writeString(originalLanguage);
+        parcel.writeString(originalTitle);
+        parcel.writeString(backdropPath);
+        parcel.writeString(overview);
+        parcel.writeString(releaseDate);
+    }
+
+    private Movie(Parcel in) {
+        voteCount = in.readInt();
+        id = in.readInt();
+        voteAverage = in.readDouble();
+        title = in.readString();
+        popularity = in.readDouble();
+        posterPath = in.readString();
+        originalLanguage = in.readString();
+        originalTitle = in.readString();
+        backdropPath = in.readString();
+        overview = in.readString();
+        releaseDate = in.readString();
+    }
+
+    public final Parcelable.Creator<Movie> CREATOR = new Parcelable.Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel parcel) {
+            return new Movie(parcel);
+        }
+
+        @Override
+        public Movie[] newArray(int i) {
+            return new Movie[i];
+        }
+    };
+
 
 }
