@@ -26,7 +26,7 @@ MovieAdapter.MovieClickListener{
     private int mScreenWidthPx;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
