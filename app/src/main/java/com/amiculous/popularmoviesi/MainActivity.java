@@ -23,12 +23,14 @@ MovieAdapter.MovieClickListener{
 
     RecyclerView mMovieRecyclerView;
     MovieAdapter mAdapter;
+    int mScreenWidthPx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mMovieRecyclerView = (RecyclerView) findViewById(R.id.rvMovies);
+        getScreenWidthPx();
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
     }
 
@@ -77,13 +79,13 @@ MovieAdapter.MovieClickListener{
     public void onMovieClick(Movie movie) {
         Intent movieDetailIntent = new Intent(MainActivity.this,MovieDetailActivity.class);
         movieDetailIntent.putExtra(getString(R.string.movie_extra_key),movie);
-        movieDetailIntent.putExtra(getString(R.string.screen_width_extra_key),getScreenWidthPx());
+        movieDetailIntent.putExtra(getString(R.string.screen_width_extra_key),mScreenWidthPx);
         startActivity(movieDetailIntent);
     }
 
-    private int getScreenWidthPx() {
+    private void getScreenWidthPx() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.widthPixels;
+        mScreenWidthPx = displayMetrics.widthPixels;
     }
 }
