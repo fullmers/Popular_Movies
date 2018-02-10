@@ -66,7 +66,7 @@ MovieAdapter.MovieClickListener{
         }
         int numberOfColumns = 2;
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        mAdapter = new MovieAdapter(this, this, movies);
+        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
         mMovieRecyclerView.setAdapter(mAdapter);
     }
 
