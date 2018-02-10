@@ -2,8 +2,12 @@ package com.amiculous.popularmoviesi;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.amiculous.popularmoviesi.utils.NetworkUtils;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -38,6 +42,14 @@ public class MovieDetailActivity extends AppCompatActivity {
         TvReleaseDate.setText(getReleaseYear());
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
+
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        int width = displayMetrics.widthPixels;
+        String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),width);
+        Picasso.with(this)
+                .load(posterUrl)
+                .into(ImageMoviePoster);
     }
 
     private String getReleaseYear() {
