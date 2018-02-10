@@ -4,6 +4,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="api_key_label">api_key</string>
     <string name="movie_extra_key">movie</string>
+    <string name="screen_width_extra_key">screen_width</string>
 
     <!-- ******************* preference strings ******************* -->
     <!-- Label for the sort by preference -->

@@ -2,7 +2,6 @@ package com.amiculous.popularmoviesi;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -14,7 +13,8 @@ import butterknife.ButterKnife;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
-    Movie mMovie;
+    private Movie mMovie;
+    private int mScreenWidth;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
@@ -33,6 +33,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
+            mScreenWidth = extras.getInt(getString(R.string.screen_width_extra_key));
             setupUI();
         }
     }
@@ -43,10 +44,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
 
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        int width = displayMetrics.widthPixels;
-        String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),width);
+        String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
         Picasso.with(this)
                 .load(posterUrl)
                 .into(ImageMoviePoster);

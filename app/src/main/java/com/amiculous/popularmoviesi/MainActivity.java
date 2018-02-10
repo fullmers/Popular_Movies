@@ -7,6 +7,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,14 +21,14 @@ MovieAdapter.MovieClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ID_MOVIE_LOADER = 0;
 
-    RecyclerView movieRecyclerView;
-    MovieAdapter adapter;
+    RecyclerView mMovieRecyclerView;
+    MovieAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        movieRecyclerView = (RecyclerView) findViewById(R.id.rvMovies);
+        mMovieRecyclerView = (RecyclerView) findViewById(R.id.rvMovies);
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
     }
 
@@ -62,9 +63,9 @@ MovieAdapter.MovieClickListener{
             Log.d(TAG,title);
         }
         int numberOfColumns = 2;
-        movieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        adapter = new MovieAdapter(this, this, movies);
-        movieRecyclerView.setAdapter(adapter);
+        mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        mAdapter = new MovieAdapter(this, this, movies);
+        mMovieRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -76,6 +77,13 @@ MovieAdapter.MovieClickListener{
     public void onMovieClick(Movie movie) {
         Intent movieDetailIntent = new Intent(MainActivity.this,MovieDetailActivity.class);
         movieDetailIntent.putExtra(getString(R.string.movie_extra_key),movie);
+        movieDetailIntent.putExtra(getString(R.string.screen_width_extra_key),getScreenWidthPx());
         startActivity(movieDetailIntent);
+    }
+
+    private int getScreenWidthPx() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.widthPixels;
     }
 }
