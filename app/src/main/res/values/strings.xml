@@ -31,5 +31,7 @@
 
     <!-- ******************* MovieDetailsActivity strings ******************* -->
     <string name="out_of_ten">/10</string>
+    <string name="mark_as_favorite">Mark as favorite</string>
+    <string name="unmark_as_favorite">Unmark as favorite</string>
 
 </resources>
