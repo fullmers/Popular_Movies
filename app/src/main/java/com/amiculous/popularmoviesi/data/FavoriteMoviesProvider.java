@@ -71,7 +71,7 @@ public class FavoriteMoviesProvider extends ContentProvider {
             case CODE_FAVORITE_MOVIE_DETAILS: {
                 //load all details for a single movie
                 String id = uri.getLastPathSegment();
-                String mSelection = FavoritesEntry._ID + "=?";
+                String mSelection = FavoritesEntry.COLUMN_MOVIE_ID + "=?";
                 String[] mSelectionArgs = new String[]{id};
 
                 cursor = mMoviesDbHelper.getReadableDatabase().query(

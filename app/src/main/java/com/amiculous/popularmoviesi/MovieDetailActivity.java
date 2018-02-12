@@ -1,9 +1,12 @@
 package com.amiculous.popularmoviesi;
 
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,10 +16,12 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class MovieDetailActivity extends AppCompatActivity {
 
     private Movie mMovie;
     private int mScreenWidth;
+    private Uri mUri;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
@@ -26,6 +31,7 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.text_no_internet) TextView TvNoInternet;
     @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
     @BindView(R.id.constraint_layout_has_internet) ConstraintLayout ClHasInternet;
+    @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +43,7 @@ public class MovieDetailActivity extends AppCompatActivity {
         if (extras != null) {
             mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
             mScreenWidth = extras.getInt(getString(R.string.screen_width_extra_key));
+            mUri = getIntent().getData();
             setupUI();
         }
     }
@@ -59,8 +66,52 @@ public class MovieDetailActivity extends AppCompatActivity {
             ClHasInternet.setVisibility(View.INVISIBLE);
         }
 
+        if (isFavorite()) {
+            CbFavorite.setChecked(true);
+        } else {
+            CbFavorite.setChecked(false);
+        }
 
+        CbFavorite.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                boolean checked = ((CheckBox) v).isChecked();
+                if (checked) {
+                    insertInFavoriteMovies();
+                } else {
+                    deleteFromFavoriteMovies();
+                }
+            }
+        });
     }
+
+    public boolean isFavorite() {
+        boolean isFavorite = false;
+        Cursor cursor = getContentResolver().query(
+                mUri,
+                null,
+                null,
+                null,
+                null);
+
+        try {
+            if (cursor != null && cursor.moveToFirst()) {
+                isFavorite = true;
+            }
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+        }
+        return isFavorite;
+    }
+
+
+    //TODO
+    public void insertInFavoriteMovies() {}
+    //TODO
+    public void deleteFromFavoriteMovies() {}
+
 
     private String getReleaseYear() {
         String fullDateString = mMovie.getReleaseDate();

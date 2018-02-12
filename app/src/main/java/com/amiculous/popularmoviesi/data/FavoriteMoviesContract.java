@@ -27,5 +27,11 @@ public class FavoriteMoviesContract {
         public static final String COLUMN_MOVIE_OVERVIEW = "movie_overview";
         public static final String COLUMN_MOVIE_VOTE_AVERAGE = "movie_vote_average";
         public static final String COLUMN_MOVIE_RELEASE_DATE = "movie_release_date";
+
+        public static Uri buildMovieUriWithId(int movieId) {
+            return CONTENT_URI.buildUpon()
+                    .appendPath(Long.toString(movieId))
+                    .build();
+        }
     }
 }
