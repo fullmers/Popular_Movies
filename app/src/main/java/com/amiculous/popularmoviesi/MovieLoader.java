@@ -22,6 +22,7 @@ public class MovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
     private ArrayList<Movie> mMovies;
     private URL mUrl;
 
+
     public MovieLoader(Context context) {
         super(context);
         mUrl = NetworkUtils.buildUrl(context);
@@ -41,5 +42,21 @@ public class MovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
     @Override
     public void deliverResult(ArrayList<Movie> data) {
         super.deliverResult(data);
+        mMovies = data;
+    }
+
+//    https://stackoverflow.com/questions/7474756/onloadfinished-not-called-after-coming-back-from-a-home-button-press
+// This function override was needed to solve bug that movie list was not being refreshed after
+    //changing sort setting and hitting back button from SettingsFragment
+    //it was not enough to simply implement the OnSharedPreferencesChangedListener in MainActivity
+    @Override
+    protected void onStartLoading() {
+        if (mMovies != null) {
+            deliverResult(mMovies);
+        }
+
+        if (takeContentChanged() || mMovies == null) {
+            forceLoad();
+        }
     }
 }

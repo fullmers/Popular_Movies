@@ -1,10 +1,12 @@
 package com.amiculous.popularmoviesi;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
@@ -25,6 +27,9 @@ MovieAdapter.MovieClickListener{
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int ID_MOVIE_LOADER = 0;
     private int mScreenWidthPx;
+    private SharedPreferences mPrefs;
+    private PreferenceChangeListener mPrefChangeListener;
+    private MovieAdapter mAdapter;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
     @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
@@ -35,7 +40,23 @@ MovieAdapter.MovieClickListener{
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         getScreenWidthPx();
+
+        mPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+        mPrefChangeListener = new PreferenceChangeListener();
+        mPrefs.registerOnSharedPreferenceChangeListener(mPrefChangeListener);
+
         getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
+    }
+
+
+    private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+        @Override
+        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            if (key.equals(getString(R.string.pref_sort_by_key))) {
+                getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER,null,MainActivity.this).forceLoad();
+                mAdapter.notifyDataSetChanged();
+            }
+        }
     }
 
     @Override
@@ -68,13 +89,12 @@ MovieAdapter.MovieClickListener{
         mProgressSpinner.setVisibility(View.GONE);
         int numberOfColumns = 2;
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        MovieAdapter mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
+        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
         mMovieRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onLoaderReset(Loader<ArrayList<Movie>> loader) {
-
     }
 
     @Override
@@ -90,4 +110,11 @@ MovieAdapter.MovieClickListener{
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         mScreenWidthPx = displayMetrics.widthPixels;
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mPrefs.unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
+    }
+
 }
