@@ -36,12 +36,6 @@ public class NetworkUtils {
     private static final String IMAGE_WIDTH_342 = "w342";
     private static final String IMAGE_WIDTH_500 = "w500";
     private static final String IMAGE_WIDTH_780 = "w780";
-    private static final String IMAGE_WIDTH_ORIGINAL = "original";
-
-    public static String buildMoviePosterUrl(String posterPath) {
-        Log.d(TAG,IMAGE_BASE_URL + IMAGE_WIDTH_185 + posterPath);
-        return IMAGE_BASE_URL + IMAGE_WIDTH_185 + posterPath;
-    }
 
     public static String buildMoviePosterUrl(String posterPath, int deviceWidthPx) {
         //use the image width that is less than half of the screen width, rounding down
@@ -56,8 +50,10 @@ public class NetworkUtils {
             return IMAGE_BASE_URL + IMAGE_WIDTH_342 + posterPath;
         } else if (deviceWidthPx < 684 && deviceWidthPx >= 370) {
             return IMAGE_BASE_URL + IMAGE_WIDTH_185 + posterPath;
-        } else { //deviceWidthPx < 370
-            return IMAGE_BASE_URL + IMAGE_WIDTH_92 + posterPath;
+        } else if (deviceWidthPx < 370 && deviceWidthPx >= 308) {
+            return IMAGE_BASE_URL + IMAGE_WIDTH_154 + posterPath;
+        } else { //deviceWidthPx < 308
+                return IMAGE_BASE_URL + IMAGE_WIDTH_92 + posterPath;
         }
     }
 
@@ -69,8 +65,7 @@ public class NetworkUtils {
 
         Uri movieQueryUri;
         String apiKeyLabel = context.getString(R.string.api_key_label);
-        String apiKeyValue = BuildConfig.API_KEY;
-       // String apiKeyValue = context.getString(R.string.api_key);
+        String apiKeyValue = BuildConfig.API_KEY;;
         if (sortOrder.equals(context.getString(R.string.pref_sort_by_popularity))) {
             movieQueryUri = Uri.parse(SORT_BY_POPULARITY).buildUpon()
                     .appendQueryParameter(apiKeyLabel, apiKeyValue)
@@ -82,9 +77,9 @@ public class NetworkUtils {
         }
 
         try {
-            URL weatherQueryUrl = new URL(movieQueryUri.toString());
-            Log.v(TAG, "URL: " + weatherQueryUrl);
-            return weatherQueryUrl;
+            URL movieQueryUrl = new URL(movieQueryUri.toString());
+            Log.v(TAG, "URL: " + movieQueryUrl);
+            return movieQueryUrl;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
