@@ -1,5 +1,6 @@
 package com.amiculous.popularmoviesi;
 
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
+import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -94,24 +96,29 @@ public class MovieDetailActivity extends AppCompatActivity {
                 null,
                 null);
 
-        try {
-            if (cursor != null && cursor.moveToFirst()) {
+        if (cursor != null && cursor.moveToFirst()) {
                 isFavorite = true;
-            }
-        } finally {
-            if (cursor != null) {
                 cursor.close();
-            }
         }
+
         return isFavorite;
     }
 
+    public void insertInFavoriteMovies() {
+        ContentValues contentValues= new ContentValues();
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_POSTER_URI, mMovie.getPosterPath());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_OVERVIEW, mMovie.getReleaseDate());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE, mMovie.getVoteAverage());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate());
 
-    //TODO
-    public void insertInFavoriteMovies() {}
-    //TODO
-    public void deleteFromFavoriteMovies() {}
+        getContentResolver().insert(FavoritesEntry.CONTENT_URI, contentValues);
+    }
 
+    public void deleteFromFavoriteMovies() {
+        getContentResolver().delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
+    }
 
     private String getReleaseYear() {
         String fullDateString = mMovie.getReleaseDate();

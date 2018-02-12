@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 
@@ -20,6 +21,8 @@ public class FavoriteMoviesProvider extends ContentProvider {
 
     public static final int CODE_FAVORITE_MOVIES = 100;
     public static final int CODE_FAVORITE_MOVIE_DETAILS = 101;
+
+    private static final String TAG = FavoriteMoviesProvider.class.getSimpleName();
 
     private static final UriMatcher sUriMatcher = buildUriMatcher();
     private FavoriteMoviesDbHelper mMoviesDbHelper;
@@ -103,6 +106,7 @@ public class FavoriteMoviesProvider extends ContentProvider {
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues contentValues) {
+        Log.d(TAG,"insert");
         final SQLiteDatabase db = mMoviesDbHelper.getWritableDatabase();
         int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -116,7 +120,8 @@ public class FavoriteMoviesProvider extends ContentProvider {
                         contentValues);
 
                 if (id != -1) {
-                    returnUri = ContentUris.withAppendedId(FavoritesEntry.CONTENT_URI,id);
+                    int movieId = contentValues.getAsInteger(FavoritesEntry.COLUMN_MOVIE_ID);
+                    returnUri = ContentUris.withAppendedId(FavoritesEntry.CONTENT_URI,movieId);
                 } else {
                     throw new android.database.SQLException("failed to insert row into " + uri);
                 }
@@ -140,7 +145,7 @@ public class FavoriteMoviesProvider extends ContentProvider {
             case CODE_FAVORITE_MOVIE_DETAILS:
                 //URI: content://<authority>/favorite_movies/#
                 String movieId = uri.getLastPathSegment();
-                String mSelection = FavoritesEntry._ID + "=?";
+                String mSelection = FavoritesEntry.COLUMN_MOVIE_ID + "=?";
                 String[] mSelectionArgs = new String[]{movieId};
                 favoritesDeleted = db.delete(FavoritesEntry.TABLE_NAME,
                         mSelection,
@@ -151,6 +156,7 @@ public class FavoriteMoviesProvider extends ContentProvider {
         }
 
         if (favoritesDeleted != 0) {
+            Log.d(TAG,"notifyChange of deletion");
             getContext().getContentResolver().notifyChange(uri, null);
         }
 

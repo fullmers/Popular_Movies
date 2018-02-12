@@ -9,9 +9,9 @@ import android.provider.BaseColumns;
 
 public class FavoriteMoviesContract {
 
-    public static final String CONTENT_AUTHORITY = "com.amiculous.popularmoviesi.data";
+    public static final String CONTENT_AUTHORITY = "com.amiculous.popularmoviesi";
     public static final Uri BASE_CONTENT_URI = Uri.parse("content://" + CONTENT_AUTHORITY);
-    public static final String PATH_FAVORITE_MOVIES = "favorites";
+    public static final String PATH_FAVORITE_MOVIES = "favorite_movies";
 
     public static final class FavoritesEntry implements BaseColumns {
 

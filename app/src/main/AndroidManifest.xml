@@ -35,8 +35,8 @@
         </activity>
 
         <provider
-            android:authorities="com.amiculous.popularmoviesi"
             android:name=".data.FavoriteMoviesProvider"
+            android:authorities="com.amiculous.popularmoviesi"
             android:exported="false"/>
     </application>
 

@@ -3,6 +3,7 @@ package com.amiculous.popularmoviesi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -20,6 +21,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amiculous.popularmoviesi.data.FavoriteMoviesContract;
 import com.amiculous.popularmoviesi.utils.JsonUtils;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 
@@ -130,6 +132,9 @@ MovieAdapter.MovieClickListener{
         Intent movieDetailIntent = new Intent(MainActivity.this,MovieDetailActivity.class);
         movieDetailIntent.putExtra(getString(R.string.movie_extra_key),movie);
         movieDetailIntent.putExtra(getString(R.string.screen_width_extra_key),mScreenWidthPx);
+        Uri movieUri = FavoriteMoviesContract.FavoritesEntry.buildMovieUriWithId(movie.getId());
+        Log.d(TAG,"selected movie Uri:" + movieUri.toString());
+        movieDetailIntent.setData(movieUri);
         startActivity(movieDetailIntent);
     }
 
@@ -154,7 +159,7 @@ MovieAdapter.MovieClickListener{
             mMovieRecyclerView.setVisibility(View.VISIBLE);
             if (mMovieLoader == null) {
                 getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, MainActivity.this).forceLoad();
-            } 
+            }
         } else {
             mNoInternetText.setVisibility(View.VISIBLE);
             mMovieRecyclerView.setVisibility(View.GONE);
