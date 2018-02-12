@@ -97,9 +97,18 @@ MovieAdapter.MovieClickListener{
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         if (id == ID_MOVIE_LOADER) {
-            mProgressSpinner.setVisibility(View.VISIBLE);
-            mMovieLoader = new MovieLoader(this, mNoInternetText);
-            return mMovieLoader;
+            if (NetworkUtils.isConnectedToInternet(this)) {
+                mNoInternetText.setVisibility(View.GONE);
+                mMovieRecyclerView.setVisibility(View.GONE);
+                mProgressSpinner.setVisibility(View.VISIBLE);
+                mMovieLoader = new MovieLoader(this, mNoInternetText);
+                return mMovieLoader;
+            } else {
+                mNoInternetText.setVisibility(View.VISIBLE);
+                mMovieRecyclerView.setVisibility(View.GONE);
+                mProgressSpinner.setVisibility(View.GONE);
+                return null;
+            }
         } else return null;
     }
 
@@ -143,9 +152,9 @@ MovieAdapter.MovieClickListener{
         if (NetworkUtils.isConnectedToInternet(this)) {
             mNoInternetText.setVisibility(View.GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
-            if (mMovieLoader != null) {
-                mMovieLoader.forceLoad();
-            }
+            if (mMovieLoader == null) {
+                getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            } 
         } else {
             mNoInternetText.setVisibility(View.VISIBLE);
             mMovieRecyclerView.setVisibility(View.GONE);
