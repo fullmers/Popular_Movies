@@ -1,21 +1,30 @@
 package com.amiculous.popularmoviesi;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
+import com.amiculous.popularmoviesi.utils.JsonUtils;
+import com.amiculous.popularmoviesi.utils.NetworkUtils;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -30,9 +39,11 @@ MovieAdapter.MovieClickListener{
     private SharedPreferences mPrefs;
     private PreferenceChangeListener mPrefChangeListener;
     private MovieAdapter mAdapter;
+    private MovieLoader mMovieLoader;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
     @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
+    @BindView(R.id.text_no_internet) TextView mNoInternetText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,16 +56,23 @@ MovieAdapter.MovieClickListener{
         mPrefChangeListener = new PreferenceChangeListener();
         mPrefs.registerOnSharedPreferenceChangeListener(mPrefChangeListener);
 
-        getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
+        if (NetworkUtils.isConnectedToInternet(this)) {
+            mNoInternetText.setVisibility(View.GONE);
+            getSupportLoaderManager().initLoader(ID_MOVIE_LOADER, null, this).forceLoad();
+        } else {
+            mNoInternetText.setVisibility(View.VISIBLE);
+        }
     }
-
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             if (key.equals(getString(R.string.pref_sort_by_key))) {
-                getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER,null,MainActivity.this).forceLoad();
-                mAdapter.notifyDataSetChanged();
+                if (NetworkUtils.isConnectedToInternet(MainActivity.this)) {
+                    getSupportLoaderManager().restartLoader(ID_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                } else {
+                    Log.d(TAG,"No internet");
+                }
             }
         }
     }
@@ -80,7 +98,8 @@ MovieAdapter.MovieClickListener{
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         if (id == ID_MOVIE_LOADER) {
             mProgressSpinner.setVisibility(View.VISIBLE);
-            return new MovieLoader(this);
+            mMovieLoader = new MovieLoader(this, mNoInternetText);
+            return mMovieLoader;
         } else return null;
     }
 
@@ -116,5 +135,75 @@ MovieAdapter.MovieClickListener{
         super.onDestroy();
         mPrefs.unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG,"onResume");
+        if (NetworkUtils.isConnectedToInternet(this)) {
+            mNoInternetText.setVisibility(View.GONE);
+            mMovieRecyclerView.setVisibility(View.VISIBLE);
+            if (mMovieLoader != null) {
+                mMovieLoader.forceLoad();
+            }
+        } else {
+            mNoInternetText.setVisibility(View.VISIBLE);
+            mMovieRecyclerView.setVisibility(View.GONE);
+        }
+    }
+
+    public static class MovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
+
+        private final String TAG = MovieLoader.class.getSimpleName();
+
+        private ArrayList<Movie> mMovies;
+        private URL mUrl;
+        private TextView mNoInternetText;
+
+
+        public MovieLoader(Context context, TextView noInternetText) {
+            super(context);
+            mUrl = NetworkUtils.buildUrl(context);
+            mNoInternetText = noInternetText;
+        }
+
+        @Override
+        public ArrayList<Movie> loadInBackground() {
+            try {
+                String response = NetworkUtils.getResponseFromHttpUrl(mUrl);
+                return JsonUtils.getMoviesFromJson(response);
+            } catch (IOException e) {
+                Log.d(TAG,e.toString());
+            }
+            return null;
+        }
+
+        @Override
+        public void deliverResult(ArrayList<Movie> data) {
+            super.deliverResult(data);
+            mMovies = data;
+        }
+
+        //    https://stackoverflow.com/questions/7474756/onloadfinished-not-called-after-coming-back-from-a-home-button-press
+// This function override was needed to solve bug that movie list was not being refreshed after
+        //changing sort setting and hitting back button from SettingsFragment
+        //it was not enough to simply implement the OnSharedPreferencesChangedListener in MainActivity
+        @Override
+        protected void onStartLoading() {
+            if (mMovies != null) {
+                if (NetworkUtils.isConnectedToInternet(getContext())) {
+                    mNoInternetText.setVisibility(View.GONE);
+                    deliverResult(mMovies);
+                } else {
+                    mNoInternetText.setVisibility(View.VISIBLE);
+                }
+            }
+
+            if (takeContentChanged() || mMovies == null) {
+                forceLoad();
+            }
+        }
+    }
+
 
 }

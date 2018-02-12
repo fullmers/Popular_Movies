@@ -7,7 +7,9 @@ import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
-import android.util.Log;
+import android.widget.Toast;
+
+import com.amiculous.popularmoviesi.utils.NetworkUtils;
 
 /**
  * Created by sarah on 08/02/2018.
@@ -28,11 +30,15 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(getString(R.string.pref_sort_by_key))) {
-            Preference sortByPreference = findPreference(key);
-            setPreferenceSummary(sortByPreference, sharedPreferences.getString(key, ""));
-            Log.d("sort by",sharedPreferences.getString(key, ""));
+        if (NetworkUtils.isConnectedToInternet(getContext())) {
+            if (key.equals(getString(R.string.pref_sort_by_key))) {
+                Preference sortByPreference = findPreference(key);
+                setPreferenceSummary(sortByPreference, sharedPreferences.getString(key, ""));
+            }
+        } else {
+            Toast.makeText(getContext(),getString(R.string.no_internet_toast),Toast.LENGTH_LONG).show();
         }
+
     }
 
     @Override
