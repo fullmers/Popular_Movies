@@ -1,7 +1,9 @@
 package com.amiculous.popularmoviesi;
 
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -21,8 +23,9 @@ public class MovieDetailActivity extends AppCompatActivity {
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
     @BindView(R.id.text_user_rating) TextView TvUserRating;
     @BindView(R.id.text_overview) TextView TvOverview;
-
+    @BindView(R.id.text_no_internet) TextView TvNoInternet;
     @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
+    @BindView(R.id.constraint_layout_has_internet) ConstraintLayout ClHasInternet;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +47,19 @@ public class MovieDetailActivity extends AppCompatActivity {
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
 
-        String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
-        Picasso.with(this)
-                .load(posterUrl)
-                .into(ImageMoviePoster);
+        if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+            TvNoInternet.setVisibility(View.GONE);
+            ClHasInternet.setVisibility(View.VISIBLE);
+            String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
+            Picasso.with(this)
+                    .load(posterUrl)
+                    .into(ImageMoviePoster);
+        } else {
+            TvNoInternet.setVisibility(View.VISIBLE);
+            ClHasInternet.setVisibility(View.INVISIBLE);
+        }
+
+
     }
 
     private String getReleaseYear() {
