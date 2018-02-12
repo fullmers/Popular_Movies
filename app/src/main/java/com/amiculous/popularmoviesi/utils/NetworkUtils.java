@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.amiculous.popularmoviesi.BuildConfig;
 import com.amiculous.popularmoviesi.R;
 
 import java.io.IOException;
@@ -68,7 +69,8 @@ public class NetworkUtils {
 
         Uri movieQueryUri;
         String apiKeyLabel = context.getString(R.string.api_key_label);
-        String apiKeyValue = context.getString(R.string.api_key);
+        String apiKeyValue = BuildConfig.API_KEY;
+       // String apiKeyValue = context.getString(R.string.api_key);
         if (sortOrder.equals(context.getString(R.string.pref_sort_by_popularity))) {
             movieQueryUri = Uri.parse(SORT_BY_POPULARITY).buildUpon()
                     .appendQueryParameter(apiKeyLabel, apiKeyValue)
