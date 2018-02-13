@@ -5,25 +5,31 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
+import com.amiculous.popularmoviesi.loaders.MovieExtrasLoader;
+import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MovieDetailActivity extends AppCompatActivity {
+public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<MovieExtras>{
 
     private Movie mMovie;
     private int mScreenWidth;
     private Uri mUri;
+    private MovieExtras mMovieExtras;
+    private MovieExtrasLoader mMovieExtrasLoader;
+    private int movieId;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
@@ -46,6 +52,8 @@ public class MovieDetailActivity extends AppCompatActivity {
             mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
             mScreenWidth = extras.getInt(getString(R.string.screen_width_extra_key));
             mUri = getIntent().getData();
+            movieId = mMovie.getId();
+            mMovieExtras = new MovieExtras(movieId);
             setupUI();
         }
     }
@@ -63,6 +71,9 @@ public class MovieDetailActivity extends AppCompatActivity {
             Picasso.with(this)
                     .load(posterUrl)
                     .into(ImageMoviePoster);
+
+            getSupportLoaderManager().initLoader(0, null, MovieDetailActivity.this).forceLoad();
+
         } else {
             TvNoInternet.setVisibility(View.VISIBLE);
             ClHasInternet.setVisibility(View.INVISIBLE);
@@ -125,4 +136,23 @@ public class MovieDetailActivity extends AppCompatActivity {
         String[] parts = fullDateString.split("-");
         return parts[0];
     }
+
+    @Override
+    public Loader<MovieExtras> onCreateLoader(int id, Bundle args) {
+        mMovieExtrasLoader = new MovieExtrasLoader(this, movieId);
+        return mMovieExtrasLoader;
+    }
+
+    @Override
+    public void onLoadFinished(Loader<MovieExtras> loader, MovieExtras data) {
+
+    }
+
+    @Override
+    public void onLoaderReset(Loader<MovieExtras> loader) {
+
+    }
+
+
+    public enum MovieExtraTypes {REVIEWS, VIDEOS}
 }

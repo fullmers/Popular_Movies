@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.amiculous.popularmoviesi.BuildConfig;
+import com.amiculous.popularmoviesi.MovieDetailActivity;
 import com.amiculous.popularmoviesi.R;
 
 import java.io.IOException;
@@ -26,8 +27,15 @@ public class NetworkUtils {
 
     private static final String TAG = NetworkUtils.class.getSimpleName();
 
+    private static final String API_KEY_VALUE = BuildConfig.API_KEY;
+    private static final String API_KEY_LABEL = "api_key";
+
     private static final String SORT_BY_POPULARITY = "https://api.themoviedb.org/3/movie/popular";
     private static final String SORT_BY_TOP_RATED = "https://api.themoviedb.org/3/movie/top_rated";
+    private static final String MOVIE_BASE = "https://api.themoviedb.org/3/movie/";
+    private static final String REVIEW = "/reviews";
+    private static final String VIDEOS = "/videos";
+
 
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String IMAGE_WIDTH_92 = "w92";
@@ -57,6 +65,32 @@ public class NetworkUtils {
         }
     }
 
+    public static URL buildExtrasUrl(int movieId, MovieDetailActivity.MovieExtraTypes movieExtraTypes) {
+        Uri extrasQueryUri;
+        String uriString = "";
+        switch (movieExtraTypes) {
+            case REVIEWS: {
+                uriString = MOVIE_BASE + movieId + REVIEW;
+                break;
+            }
+            case VIDEOS: {
+                uriString = MOVIE_BASE + movieId + VIDEOS;
+                break;
+            }
+        }
+        extrasQueryUri = Uri.parse(uriString).buildUpon()
+                    .appendQueryParameter(API_KEY_LABEL, API_KEY_VALUE)
+                    .build();
+        try {
+            URL extrasQueryUrl = new URL(extrasQueryUri.toString());
+            Log.v(TAG, "MovieExtras URL: " + extrasQueryUrl);
+            return extrasQueryUrl;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static URL buildUrl(Context context) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
         String keyForSortOrder = context.getString(R.string.pref_sort_by_key);
@@ -64,15 +98,13 @@ public class NetworkUtils {
         String sortOrder = sp.getString(keyForSortOrder, defaultSortOrder);
 
         Uri movieQueryUri;
-        String apiKeyLabel = context.getString(R.string.api_key_label);
-        String apiKeyValue = BuildConfig.API_KEY;;
         if (sortOrder.equals(context.getString(R.string.pref_sort_by_popularity))) {
             movieQueryUri = Uri.parse(SORT_BY_POPULARITY).buildUpon()
-                    .appendQueryParameter(apiKeyLabel, apiKeyValue)
+                    .appendQueryParameter(API_KEY_LABEL, API_KEY_VALUE)
                     .build();
         } else {
             movieQueryUri = Uri.parse(SORT_BY_TOP_RATED).buildUpon()
-                    .appendQueryParameter(apiKeyLabel, apiKeyValue)
+                    .appendQueryParameter(API_KEY_LABEL, API_KEY_VALUE)
                     .build();
         }
 
