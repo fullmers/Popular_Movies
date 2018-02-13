@@ -3,6 +3,7 @@ package com.amiculous.popularmoviesi.utils;
 import android.util.Log;
 
 import com.amiculous.popularmoviesi.data.Movie;
+import com.amiculous.popularmoviesi.data.MovieReview;
 import com.amiculous.popularmoviesi.data.MovieVideo;
 
 import org.json.JSONArray;
@@ -34,6 +35,10 @@ public class JsonUtils {
     //videos:
     private static final String KEY = "key";
     private static final String NAME = "name";
+
+    //reviews:
+    private static final String AUTHOR = "author";
+    private static final String CONTENT = "content";
 
     public static ArrayList<Movie> getMoviesFromJson(String jsonString){
 
@@ -86,4 +91,28 @@ public class JsonUtils {
         }
         return null;
     }
+
+    public static ArrayList<MovieReview> getMovieReviewsFromJson(String jsonString){
+        ArrayList<MovieReview> reviews = new ArrayList<>();
+        try {
+            JSONObject baseObject = new JSONObject(jsonString);
+            int id = baseObject.optInt(ID);
+            JSONArray resultsArray = baseObject.getJSONArray(RESULTS);
+
+            for (int i = 0; i< resultsArray.length(); i++) {
+                JSONObject video = resultsArray.getJSONObject(i);
+
+                String author = video.optString(AUTHOR);
+                String content = video.optString(CONTENT);
+
+                MovieReview thisMovieReview = new MovieReview(id, author, content);
+                reviews.add(thisMovieReview);
+            }
+            return reviews;
+        } catch (JSONException e) {
+            Log.d(TAG,e.toString());
+        }
+        return null;
+    }
+
 }

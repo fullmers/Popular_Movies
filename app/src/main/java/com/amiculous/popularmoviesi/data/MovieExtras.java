@@ -10,15 +10,15 @@ public class MovieExtras {
 
     private int movieId;
     private ArrayList<MovieVideo> youtubeVideos;
-    private ArrayList<String> reviews;
+    private ArrayList<MovieReview> reviews;
 
     public MovieExtras(int movieId) {
         this.movieId = movieId;
         this.youtubeVideos = new ArrayList<MovieVideo>();
-        this.reviews = new ArrayList<String>();
+        this.reviews = new ArrayList<MovieReview>();
     }
 
-    public MovieExtras(int movieId, ArrayList<MovieVideo> youtubeVideos, ArrayList<String> reviews) {
+    public MovieExtras(int movieId, ArrayList<MovieVideo> youtubeVideos, ArrayList<MovieReview> reviews) {
         this.movieId = movieId;
         this.youtubeVideos = youtubeVideos;
         this.reviews = reviews;
@@ -40,11 +40,11 @@ public class MovieExtras {
         this.youtubeVideos = youtubeVideos;
     }
 
-    public ArrayList<String> getReviews() {
+    public ArrayList<MovieReview> getReviews() {
         return reviews;
     }
 
-    public void setReviews(ArrayList<String> reviews) {
+    public void setReviews(ArrayList<MovieReview> reviews) {
         this.reviews = reviews;
     }
 }

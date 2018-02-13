@@ -27,5 +27,5 @@ public class MovieReview {
     public String getContent() {
         return content;
     }
-    
+
 }

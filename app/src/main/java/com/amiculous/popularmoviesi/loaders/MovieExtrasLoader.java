@@ -7,6 +7,7 @@ import android.util.Log;
 
 import com.amiculous.popularmoviesi.MovieDetailActivity;
 import com.amiculous.popularmoviesi.data.MovieExtras;
+import com.amiculous.popularmoviesi.data.MovieReview;
 import com.amiculous.popularmoviesi.data.MovieVideo;
 import com.amiculous.popularmoviesi.utils.JsonUtils;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
@@ -20,7 +21,7 @@ import java.util.ArrayList;
  */
 
 public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
-    private final String TAG = ApiMovieLoader.class.getSimpleName();
+    private final String TAG = MovieExtrasLoader.class.getSimpleName();
 
     private MovieExtras mMovieExtras;
     private int mMovieId;
@@ -42,14 +43,11 @@ public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
 
         try {
             String reviewsResponse = NetworkUtils.getResponseFromHttpUrl(reviewsURL);
-            Log.d(TAG,"Reviews: \n" + reviewsResponse);
+            ArrayList<MovieReview> reviews = JsonUtils.getMovieReviewsFromJson(reviewsResponse);
+
             String videosResponse = NetworkUtils.getResponseFromHttpUrl(videosURL);
             ArrayList<MovieVideo> videos = JsonUtils.getMovieVideosFromJson(videosResponse);
-            Log.d(TAG,"Videos: \n" + videosResponse);
-            for (MovieVideo video : videos) {
-                Log.d(TAG,video.getName());
-                Log.d(TAG,video.getYoutubeURL().toString());
-            }
+
             return mMovieExtras;
         } catch (IOException e) {
             Log.d(TAG,e.toString());
