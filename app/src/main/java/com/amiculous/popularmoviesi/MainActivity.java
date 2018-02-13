@@ -65,15 +65,6 @@ MovieAdapter.MovieClickListener{
         else {
             getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
         }
-
-     /*   if (NetworkUtils.isConnectedToInternet(this)) {
-            mNoInternetText.setVisibility(View.GONE);
-            //getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, this).forceLoad();
-            getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, this).forceLoad();
-
-        } else {
-            mNoInternetText.setVisibility(View.VISIBLE);
-        }*/
     }
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
@@ -138,7 +129,6 @@ MovieAdapter.MovieClickListener{
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
         mProgressSpinner.setVisibility(View.GONE);
         int numberOfColumns = 2;
-        Log.d(TAG,"onLoadFinished");
         for (Movie movie: movies) {
             Log.d(TAG,movie.getTitle());
         }
@@ -174,7 +164,7 @@ MovieAdapter.MovieClickListener{
         mPrefs.unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
     }
 
-    @Override
+  @Override
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume");
