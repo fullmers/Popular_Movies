@@ -42,8 +42,8 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
 
     @Override
     public void deliverResult(ArrayList<Movie> data) {
-        super.deliverResult(data);
         mMovies = data;
+        super.deliverResult(data);
     }
 
     public ArrayList<Movie> getFavorites() {
@@ -54,7 +54,7 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
         int movieVoteAverageIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE);
         int movieReleaseDateIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE);
         ArrayList<Movie> favoriteMovies = new ArrayList<>();
-        Log.d(TAG,"All favorites:");
+        Log.d(TAG,"All favorites:" + mCursor.getCount());
         while(mCursor.moveToNext()) {
             String movieTitle = mCursor.getString(movieTitleIndex);
             int movieId = mCursor.getInt(movieIdIndex);
@@ -67,7 +67,16 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
             favoriteMovies.add(movie);
             Log.d(TAG,movieTitle + " " + movieId);
         }
+        if (mCursor != null) {
+            mCursor.close();
+        }
         return favoriteMovies;
     }
 
+   @Override
+    protected void onStartLoading() {
+        if (mMovies != null) {
+            deliverResult(mMovies);
+        }
+    }
 }
