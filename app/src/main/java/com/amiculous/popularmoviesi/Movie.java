@@ -9,34 +9,20 @@ import android.os.Parcelable;
 
 public class Movie implements Parcelable {
 
-    private int voteCount;
     private int id;
     private double voteAverage;
     private String title;
-    private double popularity;
     private String posterPath;
-    private String originalLanguage;
-    private String originalTitle;
-    private String backdropPath;
     private String overview;
     private String releaseDate;
 
-    public Movie(int voteCount, int id, double voteAverage, String title, double popularity, String posterPath, String originalLanguage, String originalTitle, String backdropPath, String overview, String releaseDate) {
-        this.voteCount = voteCount;
+    public Movie(int id, double voteAverage, String title, String posterPath, String overview, String releaseDate) {
         this.id = id;
         this.voteAverage = voteAverage;
         this.title = title;
-        this.popularity = popularity;
         this.posterPath = posterPath;
-        this.originalLanguage = originalLanguage;
-        this.originalTitle = originalTitle;
-        this.backdropPath = backdropPath;
         this.overview = overview;
         this.releaseDate = releaseDate;
-    }
-
-    public int getVoteCount() {
-        return voteCount;
     }
 
     public int getId() {
@@ -51,24 +37,8 @@ public class Movie implements Parcelable {
         return title;
     }
 
-    public double getPopularity() {
-        return popularity;
-    }
-
     public String getPosterPath() {
         return posterPath;
-    }
-
-    public String getOriginalLanguage() {
-        return originalLanguage;
-    }
-
-    public String getOriginalTitle() {
-        return originalTitle;
-    }
-
-    public String getBackdropPath() {
-        return backdropPath;
     }
 
     public String getOverview() {
@@ -86,29 +56,19 @@ public class Movie implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
-        parcel.writeInt(voteCount);
         parcel.writeInt(id);
         parcel.writeDouble(voteAverage);
         parcel.writeString(title);
-        parcel.writeDouble(popularity);
         parcel.writeString(posterPath);
-        parcel.writeString(originalLanguage);
-        parcel.writeString(originalTitle);
-        parcel.writeString(backdropPath);
         parcel.writeString(overview);
         parcel.writeString(releaseDate);
     }
 
     private Movie(Parcel in) {
-        voteCount = in.readInt();
         id = in.readInt();
         voteAverage = in.readDouble();
         title = in.readString();
-        popularity = in.readDouble();
         posterPath = in.readString();
-        originalLanguage = in.readString();
-        originalTitle = in.readString();
-        backdropPath = in.readString();
         overview = in.readString();
         releaseDate = in.readString();
     }
