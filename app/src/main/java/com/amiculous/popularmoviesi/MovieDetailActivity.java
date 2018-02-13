@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -16,9 +17,12 @@ import android.widget.TextView;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.data.MovieExtras;
+import com.amiculous.popularmoviesi.data.MovieVideo;
 import com.amiculous.popularmoviesi.loaders.MovieExtrasLoader;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -146,7 +150,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
     @Override
-    public void onLoadFinished(Loader<MovieExtras> loader, MovieExtras data) {
+    public void onLoadFinished(Loader<MovieExtras> loader, MovieExtras movieExtras) {
+        ArrayList<MovieVideo> videos = movieExtras.getYoutubeVideos();
+        for (MovieVideo video : videos) {
+            Log.d(TAG,video.getYoutubeURL().toString());
+        }
 
     }
 
