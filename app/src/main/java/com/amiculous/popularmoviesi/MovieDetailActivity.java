@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
+import com.amiculous.popularmoviesi.data.Movie;
+import com.amiculous.popularmoviesi.data.MovieExtras;
 import com.amiculous.popularmoviesi.loaders.MovieExtrasLoader;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;

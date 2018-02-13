@@ -1,4 +1,4 @@
-package com.amiculous.popularmoviesi;
+package com.amiculous.popularmoviesi.data;
 
 import java.util.ArrayList;
 
@@ -9,18 +9,18 @@ import java.util.ArrayList;
 public class MovieExtras {
 
     private int movieId;
-    private ArrayList<String> youtubeVideoKeys;
+    private ArrayList<MovieVideo> youtubeVideos;
     private ArrayList<String> reviews;
 
     public MovieExtras(int movieId) {
         this.movieId = movieId;
-        this.youtubeVideoKeys = new ArrayList<String>();
+        this.youtubeVideos = new ArrayList<MovieVideo>();
         this.reviews = new ArrayList<String>();
     }
 
-    public MovieExtras(int movieId, ArrayList<String> youtubeVideoKeys, ArrayList<String> reviews) {
+    public MovieExtras(int movieId, ArrayList<MovieVideo> youtubeVideos, ArrayList<String> reviews) {
         this.movieId = movieId;
-        this.youtubeVideoKeys = youtubeVideoKeys;
+        this.youtubeVideos = youtubeVideos;
         this.reviews = reviews;
     }
 
@@ -32,12 +32,12 @@ public class MovieExtras {
         this.movieId = movieId;
     }
 
-    public ArrayList<String> getYoutubeVideoKeys() {
-        return youtubeVideoKeys;
+    public ArrayList<MovieVideo> getYoutubeVideos() {
+        return youtubeVideos;
     }
 
-    public void setYoutubeVideoKeys(ArrayList<String> youtubeVideoKeys) {
-        this.youtubeVideoKeys = youtubeVideoKeys;
+    public void setYoutubeVideos(ArrayList<MovieVideo> youtubeVideos) {
+        this.youtubeVideos = youtubeVideos;
     }
 
     public ArrayList<String> getReviews() {

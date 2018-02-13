@@ -1,4 +1,4 @@
-package com.amiculous.popularmoviesi;
+package com.amiculous.popularmoviesi.data;
 
 import android.os.Parcel;
 import android.os.Parcelable;

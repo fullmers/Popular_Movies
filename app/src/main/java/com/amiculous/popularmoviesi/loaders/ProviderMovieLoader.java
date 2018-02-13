@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
-import com.amiculous.popularmoviesi.Movie;
+import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 
 import java.util.ArrayList;

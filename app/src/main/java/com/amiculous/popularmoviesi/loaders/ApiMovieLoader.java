@@ -6,7 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.amiculous.popularmoviesi.Movie;
+import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.utils.JsonUtils;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 

@@ -6,7 +6,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.util.Log;
 
 import com.amiculous.popularmoviesi.MovieDetailActivity;
-import com.amiculous.popularmoviesi.MovieExtras;
+import com.amiculous.popularmoviesi.data.MovieExtras;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 
 import java.io.IOException;
