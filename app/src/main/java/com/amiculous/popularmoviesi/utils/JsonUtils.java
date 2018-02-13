@@ -2,7 +2,6 @@ package com.amiculous.popularmoviesi.utils;
 
 import android.util.Log;
 
-import com.amiculous.popularmoviesi.MovieDetailActivity;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.data.MovieVideo;
 
@@ -65,7 +64,6 @@ public class JsonUtils {
     }
 
     public static ArrayList<MovieVideo> getMovieVideosFromJson(String jsonString){
-
         ArrayList<MovieVideo> videos = new ArrayList<>();
         try {
             JSONObject baseObject = new JSONObject(jsonString);
@@ -76,13 +74,12 @@ public class JsonUtils {
                 JSONObject video = resultsArray.getJSONObject(i);
 
                 String key = video.optString(KEY);
-                URL url = NetworkUtils.buildExtrasUrl(id, MovieDetailActivity.MovieExtraTypes.VIDEOS);
+                URL url = NetworkUtils.buildYoutubeUrl(key);
                 String name = video.optString(NAME);
 
                 MovieVideo thisMovieVideo = new MovieVideo(id, url, name);
                 videos.add(thisMovieVideo);
             }
-
             return videos;
         } catch (JSONException e) {
             Log.d(TAG,e.toString());

@@ -48,6 +48,7 @@ public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
             Log.d(TAG,"Videos: \n" + videosResponse);
             for (MovieVideo video : videos) {
                 Log.d(TAG,video.getName());
+                Log.d(TAG,video.getYoutubeURL().toString());
             }
             return mMovieExtras;
         } catch (IOException e) {

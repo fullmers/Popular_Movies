@@ -36,6 +36,7 @@ public class NetworkUtils {
     private static final String REVIEW = "/reviews";
     private static final String VIDEOS = "/videos";
 
+    private static final String YOUTUBE_BASE = "https://www.youtube.com/watch?v=";
 
     private static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     private static final String IMAGE_WIDTH_92 = "w92";
@@ -85,6 +86,19 @@ public class NetworkUtils {
             URL extrasQueryUrl = new URL(extrasQueryUri.toString());
             Log.v(TAG, "MovieExtras URL: " + extrasQueryUrl);
             return extrasQueryUrl;
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public static URL buildYoutubeUrl(String key) {
+        String urlString =  YOUTUBE_BASE + key;
+
+        try {
+            URL youtubeUrl = new URL(urlString);
+            Log.v(TAG, "Youtube URL: " + urlString);
+            return youtubeUrl;
         } catch (MalformedURLException e) {
             e.printStackTrace();
             return null;
