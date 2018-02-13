@@ -29,7 +29,6 @@ public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
     public MovieExtrasLoader(Context context, int movieId) {
         super(context);
         mMovieId = movieId;
-        mMovieExtras = new MovieExtras(movieId);
     }
 
     @Nullable
@@ -48,10 +47,17 @@ public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
             String videosResponse = NetworkUtils.getResponseFromHttpUrl(videosURL);
             ArrayList<MovieVideo> videos = JsonUtils.getMovieVideosFromJson(videosResponse);
 
+            mMovieExtras = new MovieExtras(mMovieId, videos, reviews);
             return mMovieExtras;
         } catch (IOException e) {
             Log.d(TAG,e.toString());
         }
         return null;
+    }
+
+    @Override
+    public void deliverResult(MovieExtras data) {
+        super.deliverResult(data);
+        mMovieExtras = data;
     }
 }
