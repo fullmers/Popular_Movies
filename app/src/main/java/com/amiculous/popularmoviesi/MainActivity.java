@@ -2,7 +2,6 @@ package com.amiculous.popularmoviesi;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
@@ -21,8 +20,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract;
-import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.amiculous.popularmoviesi.loaders.ApiMovieLoader;
+import com.amiculous.popularmoviesi.loaders.ProviderMovieLoader;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 
 import java.util.ArrayList;
@@ -59,34 +58,15 @@ MovieAdapter.MovieClickListener{
 
         if (NetworkUtils.isConnectedToInternet(this)) {
             mNoInternetText.setVisibility(View.GONE);
-            getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, this).forceLoad();
+            //getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, this).forceLoad();
+            getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, this).forceLoad();
+
         } else {
             mNoInternetText.setVisibility(View.VISIBLE);
         }
-        getFavorites();
     }
 
-    public void getFavorites() {
-        Uri uri = FavoritesEntry.CONTENT_URI;
-        String[] projection = {
-                FavoritesEntry.COLUMN_MOVIE_ID,
-                FavoritesEntry.COLUMN_MOVIE_TITLE
-        };
-        Cursor cursor = getContentResolver().query(
-                uri,
-                projection,
-                null,
-                null,
-                null);
-        int movieTitleIndex= cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_TITLE);
-        int movieIdIndex= cursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_ID);
-        Log.d(TAG,"All favorites:");
-        while(cursor.moveToNext()) {
-            String movieTitle = cursor.getString(movieTitleIndex);
-            int movieId = cursor.getInt(movieIdIndex);
-            Log.d(TAG,movieTitle + " " + movieId);
-        }
-    }
+
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
@@ -120,21 +100,30 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
-        if (id == API_MOVIE_LOADER) {
-            if (NetworkUtils.isConnectedToInternet(this)) {
+        switch(id) {
+            case(API_MOVIE_LOADER): {
+                if (NetworkUtils.isConnectedToInternet(this)) {
+                    mNoInternetText.setVisibility(View.GONE);
+                    mMovieRecyclerView.setVisibility(View.GONE);
+                    mProgressSpinner.setVisibility(View.VISIBLE);
+                    mApiMovieLoader = new ApiMovieLoader(this, mNoInternetText);
+                    return mApiMovieLoader;
+                } else {
+                    mNoInternetText.setVisibility(View.VISIBLE);
+                    mMovieRecyclerView.setVisibility(View.GONE);
+                    mProgressSpinner.setVisibility(View.GONE);
+                    return null;
+                }
+            } case(FAVORITES_MOVIE_LOADER): {
                 mNoInternetText.setVisibility(View.GONE);
                 mMovieRecyclerView.setVisibility(View.GONE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
-                mApiMovieLoader = new ApiMovieLoader(this, mNoInternetText);
-                return mApiMovieLoader;
-            } else {
-                mNoInternetText.setVisibility(View.VISIBLE);
-                mMovieRecyclerView.setVisibility(View.GONE);
-                mProgressSpinner.setVisibility(View.GONE);
+                return new ProviderMovieLoader(this);
+            } default:
                 return null;
-            }
-        } else return null;
+        }
     }
+
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {

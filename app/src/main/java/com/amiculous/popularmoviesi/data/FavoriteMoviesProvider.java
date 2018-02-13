@@ -57,7 +57,11 @@ public class FavoriteMoviesProvider extends ContentProvider {
                 String[] mProjection = {
                         FavoritesEntry._ID,
                         FavoritesEntry.COLUMN_MOVIE_ID,
-                        FavoritesEntry.COLUMN_MOVIE_TITLE
+                        FavoritesEntry.COLUMN_MOVIE_TITLE,
+                        FavoritesEntry.COLUMN_MOVIE_POSTER_URI,
+                        FavoritesEntry.COLUMN_MOVIE_OVERVIEW,
+                        FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE,
+                        FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE
                 };
                 cursor = mMoviesDbHelper.getReadableDatabase().query(
                         FavoritesEntry.TABLE_NAME,
