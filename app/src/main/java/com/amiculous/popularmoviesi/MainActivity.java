@@ -38,8 +38,10 @@ MovieAdapter.MovieClickListener{
     private int mScreenWidthPx;
     private SharedPreferences mPrefs;
     private PreferenceChangeListener mPrefChangeListener;
+    private String mCurrentSortPref;
     private MovieAdapter mAdapter;
     private ApiMovieLoader mApiMovieLoader;
+    private ProviderMovieLoader mProviderMovieLoader;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
     @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
@@ -56,27 +58,33 @@ MovieAdapter.MovieClickListener{
         mPrefChangeListener = new PreferenceChangeListener();
         mPrefs.registerOnSharedPreferenceChangeListener(mPrefChangeListener);
 
-        if (NetworkUtils.isConnectedToInternet(this)) {
+        mCurrentSortPref = mPrefs.getString(getString(R.string.pref_sort_by_key), "");
+        if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+            getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+        }
+        else {
+            getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+        }
+
+     /*   if (NetworkUtils.isConnectedToInternet(this)) {
             mNoInternetText.setVisibility(View.GONE);
             //getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, this).forceLoad();
             getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, this).forceLoad();
 
         } else {
             mNoInternetText.setVisibility(View.VISIBLE);
-        }
+        }*/
     }
-
-
 
     private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-            if (key.equals(getString(R.string.pref_sort_by_key))) {
-                if (NetworkUtils.isConnectedToInternet(MainActivity.this)) {
-                    getSupportLoaderManager().restartLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
-                } else {
-                    Log.d(TAG,"No internet");
-                }
+            mCurrentSortPref = prefs.getString(key, "");
+            if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            }
+            else {
+                getSupportLoaderManager().restartLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         }
     }
@@ -118,7 +126,8 @@ MovieAdapter.MovieClickListener{
                 mNoInternetText.setVisibility(View.GONE);
                 mMovieRecyclerView.setVisibility(View.GONE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
-                return new ProviderMovieLoader(this);
+                mProviderMovieLoader = new ProviderMovieLoader(this);
+                return mProviderMovieLoader;
             } default:
                 return null;
         }
@@ -129,6 +138,10 @@ MovieAdapter.MovieClickListener{
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
         mProgressSpinner.setVisibility(View.GONE);
         int numberOfColumns = 2;
+        Log.d(TAG,"onLoadFinished");
+        for (Movie movie: movies) {
+            Log.d(TAG,movie.getTitle());
+        }
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
         mMovieRecyclerView.setAdapter(mAdapter);
@@ -168,8 +181,10 @@ MovieAdapter.MovieClickListener{
         if (NetworkUtils.isConnectedToInternet(this)) {
             mNoInternetText.setVisibility(View.GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
-            if (mApiMovieLoader == null) {
+            if (mApiMovieLoader == null && !mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
                 getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            } else if (mProviderMovieLoader == null && mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         } else {
             mNoInternetText.setVisibility(View.VISIBLE);
