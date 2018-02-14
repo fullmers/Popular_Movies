@@ -75,9 +75,11 @@ MovieAdapter.MovieClickListener{
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             mCurrentSortPref = prefs.getString(key, "");
             if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                mIsFavorites = true;
                 getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
             else {
+                mIsFavorites = false;
                 getSupportLoaderManager().restartLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         }
@@ -136,7 +138,7 @@ MovieAdapter.MovieClickListener{
             Log.d(TAG,movie.getTitle());
         }
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
-        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx);
+        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
         mMovieRecyclerView.setAdapter(mAdapter);
     }
 
