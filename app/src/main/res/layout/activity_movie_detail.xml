@@ -139,9 +139,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
+                android:paddingBottom="10dp"
                 android:text="@string/no_trailers"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTrailers"
@@ -168,9 +169,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingTop="5dp"
+                android:paddingBottom="10dp"
                 android:text="@string/no_reviews"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:visibility="gone" />
+                android:visibility="visible" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvReviews"

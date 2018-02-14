@@ -64,6 +64,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
     @BindView(R.id.rvTrailers) RecyclerView RvVideos;
     @BindView(R.id.rvReviews) RecyclerView RvReviews;
+    @BindView(R.id.text_no_reviews) TextView TvNoReviews;
+    @BindView(R.id.text_no_trailers) TextView TvNoTrailers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -196,26 +198,40 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoadFinished(Loader<MovieExtras> loader, MovieExtras movieExtras) {
         ArrayList<MovieVideo> videos = movieExtras.getYoutubeVideos();
-        LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        RvVideos.setLayoutManager(videoLayoutManager);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
-                RvVideos.getContext(),
-                videoLayoutManager.getOrientation());
-        RvVideos.addItemDecoration(dividerItemDecoration);
-        mVideoAdapter = new VideoAdapter(this, this, videos);
-        RvVideos.setAdapter(mVideoAdapter);
-        RvVideos.setNestedScrollingEnabled(false);
+        if (videos.size() == 0 ){
+            RvVideos.setVisibility(View.GONE);
+            TvNoTrailers.setVisibility(View.VISIBLE);
+        } else {
+            RvVideos.setVisibility(View.VISIBLE);
+            TvNoTrailers.setVisibility(View.GONE);
+            LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            RvVideos.setLayoutManager(videoLayoutManager);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                    RvVideos.getContext(),
+                    videoLayoutManager.getOrientation());
+            RvVideos.addItemDecoration(dividerItemDecoration);
+            mVideoAdapter = new VideoAdapter(this, this, videos);
+            RvVideos.setAdapter(mVideoAdapter);
+            RvVideos.setNestedScrollingEnabled(false);
+        }
 
         ArrayList<MovieReview> reviews = movieExtras.getReviews();
-        LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-        RvReviews.setLayoutManager(reviewLayoutManager);
-        DividerItemDecoration reviewDividerItemDecoration = new DividerItemDecoration(
-                RvReviews.getContext(),
-                reviewLayoutManager.getOrientation());
-        RvReviews.addItemDecoration(reviewDividerItemDecoration);
-        mReviewAdapter = new ReviewAdapter(this, reviews);
-        RvReviews.setAdapter(mReviewAdapter);
-        RvReviews.setNestedScrollingEnabled(false);
+        if (reviews.size() == 0 ){
+            RvReviews.setVisibility(View.GONE);
+            TvNoReviews.setVisibility(View.VISIBLE);
+        } else {
+            RvReviews.setVisibility(View.VISIBLE);
+            TvNoReviews.setVisibility(View.GONE);
+            LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            RvReviews.setLayoutManager(reviewLayoutManager);
+            DividerItemDecoration reviewDividerItemDecoration = new DividerItemDecoration(
+                    RvReviews.getContext(),
+                    reviewLayoutManager.getOrientation());
+            RvReviews.addItemDecoration(reviewDividerItemDecoration);
+            mReviewAdapter = new ReviewAdapter(this, reviews);
+            RvReviews.setAdapter(mReviewAdapter);
+            RvReviews.setNestedScrollingEnabled(false);
+        }
     }
 
     @Override
