@@ -37,8 +37,8 @@ public class MovieExtrasLoader extends AsyncTaskLoader<MovieExtras> {
         URL reviewsURL = NetworkUtils.buildExtrasUrl(mMovieId, MovieDetailActivity.MovieExtraTypes.REVIEWS);
         URL videosURL = NetworkUtils.buildExtrasUrl(mMovieId, MovieDetailActivity.MovieExtraTypes.VIDEOS);
 
-        Log.d(TAG,reviewsURL.toString());
-        Log.d(TAG,videosURL.toString());
+        Log.d(TAG,"Reviews URL: " + reviewsURL.toString());
+        Log.d(TAG,"Videos URL: " + videosURL.toString());
 
         try {
             String reviewsResponse = NetworkUtils.getResponseFromHttpUrl(reviewsURL);
