@@ -66,7 +66,13 @@ MovieAdapter.MovieClickListener{
         }
         else {
             mIsFavorites = false;
+            if (NetworkUtils.isConnectedToInternet(this)) {
             getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            } else {
+                mNoInternetText.setVisibility(View.VISIBLE);
+                mMovieRecyclerView.setVisibility(View.GONE);
+                mProgressSpinner.setVisibility(View.GONE);
+            }
         }
     }
 
@@ -104,21 +110,17 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
+        Log.d(TAG,"starting Loader");
         switch(id) {
             case(API_MOVIE_LOADER): {
-                if (NetworkUtils.isConnectedToInternet(this)) {
                     mNoInternetText.setVisibility(View.GONE);
                     mMovieRecyclerView.setVisibility(View.GONE);
                     mProgressSpinner.setVisibility(View.VISIBLE);
                     mApiMovieLoader = new ApiMovieLoader(this, mNoInternetText);
                     return mApiMovieLoader;
-                } else {
-                    mNoInternetText.setVisibility(View.VISIBLE);
-                    mMovieRecyclerView.setVisibility(View.GONE);
-                    mProgressSpinner.setVisibility(View.GONE);
-                    return null;
-                }
+
             } case(FAVORITES_MOVIE_LOADER): {
+                Log.d(TAG,"starting Loader " + FAVORITES_MOVIE_LOADER);
                 mNoInternetText.setVisibility(View.GONE);
                 mMovieRecyclerView.setVisibility(View.GONE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
@@ -132,14 +134,17 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
+        Log.d(TAG,"onLoadFinished");
+        Log.d(TAG,"Number of movies: " + movies.size());
         mProgressSpinner.setVisibility(View.GONE);
         int numberOfColumns = 2;
         for (Movie movie: movies) {
             Log.d(TAG,movie.getTitle());
         }
-        mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
+        mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mMovieRecyclerView.setAdapter(mAdapter);
+        Log.d(TAG,"getItemCount " + mAdapter.getItemCount());
     }
 
     @Override
@@ -170,17 +175,33 @@ MovieAdapter.MovieClickListener{
     protected void onResume() {
         super.onResume();
         Log.d(TAG,"onResume");
-        if (NetworkUtils.isConnectedToInternet(this)) {
+        boolean hasInternet = NetworkUtils.isConnectedToInternet(this);
+        if (hasInternet) {
+            Log.d(TAG,"yes internet");
             mNoInternetText.setVisibility(View.GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
             if (mApiMovieLoader == null && !mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                Log.d(TAG,"has internet, not favorites");
                 getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else if (mProviderMovieLoader == null && mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                Log.d(TAG,"has internet, IS favorites");
                 getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
-        } else {
-            mNoInternetText.setVisibility(View.VISIBLE);
-            mMovieRecyclerView.setVisibility(View.GONE);
+        } else { //has no internet
+            //not favorites, nothing to see:
+            Log.d(TAG,"no internet");
+            if (!mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                Log.d(TAG,"no internet, not favorites");
+                mNoInternetText.setVisibility(View.VISIBLE);
+                mMovieRecyclerView.setVisibility(View.GONE);
+            }
+            //is favorites, can view offline:
+            else if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                Log.d(TAG,"no internet, IS favorites");
+                mNoInternetText.setVisibility(View.GONE);
+                mMovieRecyclerView.setVisibility(View.VISIBLE);
+                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            }
         }
     }
 }
