@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.amiculous.popularmoviesi.adapters.ReviewAdapter;
 import com.amiculous.popularmoviesi.adapters.VideoAdapter;
+import com.amiculous.popularmoviesi.data.FavoriteMoviesContract;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.data.MovieExtras;
@@ -43,7 +44,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private int mScreenWidth;
     private String mPosterUrl;
     private Uri mUri;
-    private MovieExtras mMovieExtras;
     private MovieExtrasLoader mMovieExtrasLoader;
     private int movieId;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
@@ -72,10 +72,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         if (extras != null) {
             mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
             mScreenWidth = extras.getInt(getString(R.string.screen_width_extra_key));
-            mUri = getIntent().getData();
             movieId = mMovie.getId();
-            mMovieExtras = new MovieExtras(movieId);
             mImageFileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
+            mUri= FavoriteMoviesContract.FavoritesEntry.buildMovieUriWithId(mMovie.getId());
+
             setupUI();
         }
     }
@@ -140,6 +140,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
 
         return isFavorite;
     }
+
 
     public void insertInFavoriteMovies() {
         ContentValues contentValues= new ContentValues();
