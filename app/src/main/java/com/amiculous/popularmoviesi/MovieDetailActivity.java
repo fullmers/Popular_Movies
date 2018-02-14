@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amiculous.popularmoviesi.adapters.ReviewAdapter;
 import com.amiculous.popularmoviesi.adapters.VideoAdapter;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.amiculous.popularmoviesi.data.Movie;
@@ -44,6 +45,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private int movieId;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
     private VideoAdapter mVideoAdapter;
+    private ReviewAdapter mReviewAdapter;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -54,6 +56,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.constraint_layout_has_internet) ConstraintLayout ClHasInternet;
     @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
     @BindView(R.id.rvTrailers) RecyclerView RvVideos;
+    @BindView(R.id.rvReviews) RecyclerView RvReviews;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,17 +163,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @Override
     public void onLoadFinished(Loader<MovieExtras> loader, MovieExtras movieExtras) {
         ArrayList<MovieVideo> videos = movieExtras.getYoutubeVideos();
-        for (MovieVideo video : videos) {
-            Log.d(TAG,video.getYoutubeURL().toString());
-            Log.d(TAG,video.getName().toString());
-        }
-
-        ArrayList<MovieReview> reviews = movieExtras.getReviews();
-        for (MovieReview review : reviews) {
-            Log.d(TAG,review.getAuthor().toString());
-            Log.d(TAG,review.getContent().toString());
-        }
-
         LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         RvVideos.setLayoutManager(videoLayoutManager);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
@@ -181,6 +173,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         RvVideos.setAdapter(mVideoAdapter);
         RvVideos.setNestedScrollingEnabled(false);
 
+        ArrayList<MovieReview> reviews = movieExtras.getReviews();
+        LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        RvReviews.setLayoutManager(reviewLayoutManager);
+        DividerItemDecoration reviewDividerItemDecoration = new DividerItemDecoration(
+                RvReviews.getContext(),
+                reviewLayoutManager.getOrientation());
+        RvReviews.addItemDecoration(reviewDividerItemDecoration);
+        mReviewAdapter = new ReviewAdapter(this, reviews);
+        RvReviews.setAdapter(mReviewAdapter);
+        RvReviews.setNestedScrollingEnabled(false);
     }
 
     @Override
