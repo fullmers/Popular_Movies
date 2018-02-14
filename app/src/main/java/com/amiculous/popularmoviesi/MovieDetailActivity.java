@@ -1,6 +1,7 @@
 package com.amiculous.popularmoviesi;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -241,8 +242,9 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
 
     @Override
     public void onMovieClick(MovieVideo video) {
-        Log.d(TAG,"clicked " + video.getName());
-        Log.d(TAG,"should point to " + video.getYoutubeURL().toString());
+        Intent launchYouTube = new Intent(Intent.ACTION_VIEW);
+        launchYouTube.setData(Uri.parse(video.getYoutubeURL().toString()));
+        startActivity(launchYouTube);
     }
 
 
