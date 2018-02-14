@@ -8,12 +8,16 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.amiculous.popularmoviesi.adapters.VideoAdapter;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract.FavoritesEntry;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.data.MovieExtras;
@@ -29,7 +33,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<MovieExtras>{
+public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<MovieExtras>,
+        VideoAdapter.VideoClickListener {
 
     private Movie mMovie;
     private int mScreenWidth;
@@ -38,6 +43,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private MovieExtrasLoader mMovieExtrasLoader;
     private int movieId;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
+    private VideoAdapter mVideoAdapter;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -47,6 +53,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
     @BindView(R.id.constraint_layout_has_internet) ConstraintLayout ClHasInternet;
     @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
+    @BindView(R.id.rvTrailers) RecyclerView RvVideos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,11 +170,28 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             Log.d(TAG,review.getAuthor().toString());
             Log.d(TAG,review.getContent().toString());
         }
+
+        LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        RvVideos.setLayoutManager(videoLayoutManager);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
+                RvVideos.getContext(),
+                videoLayoutManager.getOrientation());
+        RvVideos.addItemDecoration(dividerItemDecoration);
+        mVideoAdapter = new VideoAdapter(this, this, videos);
+        RvVideos.setAdapter(mVideoAdapter);
+        RvVideos.setNestedScrollingEnabled(false);
+
     }
 
     @Override
     public void onLoaderReset(Loader<MovieExtras> loader) {
 
+    }
+
+    @Override
+    public void onMovieClick(MovieVideo video) {
+        Log.d(TAG,"clicked " + video.getName());
+        Log.d(TAG,"should point to " + video.getYoutubeURL().toString());
     }
 
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -28,15 +28,15 @@
             tools:text="Chappie" />
 
 
-            <TextView
-                android:id="@+id/text_no_internet"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_internet"
-                android:visibility="visible"
-                android:padding="5sp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/text_no_internet"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5sp"
+            android:text="@string/no_internet"
+            android:visibility="visible"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.constraint.ConstraintLayout
             android:id="@+id/constraint_layout_has_internet"
@@ -49,10 +49,10 @@
                 android:id="@+id/image_movie_poster"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/ic_launcher"
                 android:adjustViewBounds="true"
+                android:src="@mipmap/ic_launcher"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
@@ -91,11 +91,11 @@
 
                 <CheckBox
                     android:id="@+id/chbx_favorite"
+                    style="?android:attr/starStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/mark_as_favorite"
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    style="?android:attr/starStyle"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/text_user_rating" />
 
@@ -115,65 +115,70 @@
 
         <LinearLayout
             android:id="@+id/linear_layout_requires_internet"
-            android:padding="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            >
+            android:padding="10dp">
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/dividerColor"
-                android:paddingBottom="5dp"/>
+                android:paddingBottom="5dp" />
+
             <TextView
                 android:id="@+id/text_trailers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:text="@string/trailers"/>
+                android:layout_marginTop="10dp"
+                android:text="@string/trailers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
-            android:id="@+id/text_no_trailers"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:paddingTop="5dp"
-            android:visibility="gone"
-            android:text="@string/no_trailers"/>
+                android:id="@+id/text_no_trailers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:text="@string/no_trailers"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvTrailers"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="2dp"
                 android:background="@color/dividerColor"
-                android:paddingTop="5dp"
-                android:paddingBottom="5dp"/>
+                android:paddingBottom="5dp"
+                android:paddingTop="5dp" />
 
             <TextView
                 android:id="@+id/text_rviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:text="@string/reviews"/>
+                android:layout_marginTop="10dp"
+                android:text="@string/reviews"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/text_no_reviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:paddingTop="5dp"
-                android:visibility="gone"
-                android:text="@string/no_reviews"/>
+                android:text="@string/no_reviews"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:visibility="gone" />
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rvReviews"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content" />
+
+
         </LinearLayout>
     </LinearLayout>
 
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>
