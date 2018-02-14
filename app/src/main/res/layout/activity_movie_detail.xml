@@ -39,7 +39,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <android.support.constraint.ConstraintLayout
-            android:id="@+id/constraint_layout_has_internet"
+            android:id="@+id/constraint_layout_favorite_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="10dp"

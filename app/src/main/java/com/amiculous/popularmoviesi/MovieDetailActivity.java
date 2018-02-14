@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +32,7 @@ import com.amiculous.popularmoviesi.utils.ImageUtils;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import butterknife.BindView;
@@ -57,7 +59,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.text_overview) TextView TvOverview;
     @BindView(R.id.text_no_internet) TextView TvNoInternet;
     @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
-    @BindView(R.id.constraint_layout_has_internet) ConstraintLayout ClHasInternet;
+    @BindView(R.id.constraint_layout_favorite_data) ConstraintLayout ClFavoriteData;
+    @BindView(R.id.linear_layout_requires_internet) LinearLayout LlRequiresInternet;
     @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
     @BindView(R.id.rvTrailers) RecyclerView RvVideos;
     @BindView(R.id.rvReviews) RecyclerView RvReviews;
@@ -85,26 +88,39 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         TvReleaseDate.setText(getReleaseYear());
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
-        if (isFavorite()) {
+        boolean isFavorite = isFavorite();
+        if (isFavorite) {
             CbFavorite.setChecked(true);
         } else {
             CbFavorite.setChecked(false);
         }
 
-        if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+        boolean hasInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
+        if (hasInternet) { //if hasInternet, does not matter if isFavorite
             TvNoInternet.setVisibility(View.GONE);
-            ClHasInternet.setVisibility(View.VISIBLE);
+            ClFavoriteData.setVisibility(View.VISIBLE);
+            LlRequiresInternet.setVisibility(View.VISIBLE);
             mPosterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
             Picasso.with(this)
                     .load(mPosterUrl)
                     .into(ImageMoviePoster);
 
             getSupportLoaderManager().initLoader(0, null, MovieDetailActivity.this).forceLoad();
-        } else {
-            TvNoInternet.setVisibility(View.VISIBLE);
-            ClHasInternet.setVisibility(View.INVISIBLE);
-        }
+        } else if (isFavorite) { //no internet but is favorite
+            String fileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
+            File imageFile = ImageUtils.getImageFile(this,fileName);
+            Picasso.with(this)
+                    .load(imageFile)
+                    .into(ImageMoviePoster);
 
+            TvNoInternet.setVisibility(View.VISIBLE);
+            ClFavoriteData.setVisibility(View.VISIBLE);
+            LlRequiresInternet.setVisibility(View.GONE);
+        } else { //no internet and not favorite
+            TvNoInternet.setVisibility(View.VISIBLE);
+            ClFavoriteData.setVisibility(View.INVISIBLE);
+            LlRequiresInternet.setVisibility(View.GONE);
+        }
 
         CbFavorite.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,7 +163,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_POSTER_URI, mMovie.getPosterPath());
-        contentValues.put(FavoritesEntry.COLUMN_MOVIE_OVERVIEW, mMovie.getReleaseDate());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_OVERVIEW, mMovie.getOverview());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE, mMovie.getVoteAverage());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate());
 
