@@ -80,10 +80,6 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
        if (mMovies != null) {
             deliverResult(mMovies);
         }
-
-       if (takeContentChanged() || mMovies == null) {
-           forceLoad();
-       }
     }
 
 }

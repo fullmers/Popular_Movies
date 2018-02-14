@@ -2,7 +2,6 @@ package com.amiculous.popularmoviesi.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,36 +38,29 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     }
 
     public MovieAdapter(Context context, MovieClickListener movieClickListener, ArrayList<Movie> movies, int screenWidthPx, boolean isFavorite) {
-        Log.d(TAG,"creating MovieAdapter");
         this.mContext = context;
         this.mMovies = movies;
         this.mClickListener = movieClickListener;
         this.mScreenWidthPx = screenWidthPx;
         this.mIsFavorite = isFavorite;
-        Log.d(TAG,"mMovies size constructor:" + mMovies.size());
     }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d(TAG,"onCreateViewHolder");
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_movie, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Log.d(TAG,"onBindViewHolder");
         if (mIsFavorite) {
-            Log.d(TAG,"loading local image file");
             String fileName = ImageUtils.getMoviePosterFileName(mMovies.get(position).getTitle());
             File imageFile = ImageUtils.getImageFile(mContext,fileName);
             Picasso.with(mContext)
                     .load(imageFile)
                     .into(holder.mImagePoster);
         }
-        else
-            {
-            Log.d(TAG,"loading remote image file");
+        else {
             String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovies.get(position).getPosterPath(), mScreenWidthPx);
             Picasso.with(mContext)
                     .load(posterUrl)
@@ -78,7 +70,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        Log.d(TAG,"mMovies size getCount:" + mMovies.size());
         return mMovies.size();
     }
 
@@ -87,7 +78,6 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         ViewHolder(View itemView) {
             super(itemView);
-            Log.d(TAG,"creating ViewHolder");
             ButterKnife.bind(this, itemView);
             itemView.setOnClickListener(this);
         }

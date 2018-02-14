@@ -114,29 +114,30 @@ MovieAdapter.MovieClickListener{
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
         switch(id) {
-            case(API_MOVIE_LOADER): {
+            case (API_MOVIE_LOADER): {
                     mNoInternetText.setVisibility(GONE);
                     mMovieRecyclerView.setVisibility(GONE);
                     mNoFavoritesText.setVisibility(GONE);
                     mProgressSpinner.setVisibility(View.VISIBLE);
                     mApiMovieLoader = new ApiMovieLoader(this, mNoInternetText);
                     return mApiMovieLoader;
-
-            } case(FAVORITES_MOVIE_LOADER): {
+            }
+            case (FAVORITES_MOVIE_LOADER): {
                 mNoInternetText.setVisibility(GONE);
                 mMovieRecyclerView.setVisibility(GONE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
                 mProviderMovieLoader = new ProviderMovieLoader(this);
                 return mProviderMovieLoader;
-            } default:
+            }
+            default:
                 return null;
         }
     }
 
-
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
         mProgressSpinner.setVisibility(GONE);
+        Log.d(TAG,"onLoadFinished");
         int numberOfColumns = 2;
         for (Movie movie: movies) {
             Log.d(TAG,movie.getTitle());
@@ -149,6 +150,7 @@ MovieAdapter.MovieClickListener{
             mMovieRecyclerView.setVisibility(View.GONE);
         } else {
             mMovieRecyclerView.setVisibility(View.VISIBLE);
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -183,10 +185,10 @@ MovieAdapter.MovieClickListener{
         if (hasInternet) {
             mNoInternetText.setVisibility(GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
-            if (mApiMovieLoader == null && !mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+            if (!mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
                 getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
-            } else if (mProviderMovieLoader == null && mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+            } else if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         } else { //has no internet
             //not favorites, nothing to see:
