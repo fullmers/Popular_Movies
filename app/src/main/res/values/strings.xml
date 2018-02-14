@@ -35,5 +35,10 @@
     <string name="out_of_ten">/10</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Unmark as favorite</string>
+    <string name="trailers">Trailers: </string>
+    <string name="no_trailers">No trailers available for this film</string>
+    <string name="reviews">Reviews: </string>
+    <string name="no_reviews">No reviews available for this film</string>
+    <string name="by">By: </string>
 
 </resources>
