@@ -1,4 +1,4 @@
-package com.amiculous.popularmoviesi;
+package com.amiculous.popularmoviesi.adapters;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.amiculous.popularmoviesi.R;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.utils.NetworkUtils;
 import com.squareup.picasso.Picasso;

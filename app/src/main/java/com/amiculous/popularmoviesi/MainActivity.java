@@ -19,6 +19,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.amiculous.popularmoviesi.adapters.MovieAdapter;
 import com.amiculous.popularmoviesi.data.FavoriteMoviesContract;
 import com.amiculous.popularmoviesi.data.Movie;
 import com.amiculous.popularmoviesi.loaders.ApiMovieLoader;
