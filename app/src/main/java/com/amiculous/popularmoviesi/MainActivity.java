@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.view.View.GONE;
+
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
 MovieAdapter.MovieClickListener{
 
@@ -47,6 +49,7 @@ MovieAdapter.MovieClickListener{
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
     @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
     @BindView(R.id.text_no_internet) TextView mNoInternetText;
+    @BindView(R.id.text_no_favorites) TextView mNoFavoritesText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,8 +73,8 @@ MovieAdapter.MovieClickListener{
             getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else {
                 mNoInternetText.setVisibility(View.VISIBLE);
-                mMovieRecyclerView.setVisibility(View.GONE);
-                mProgressSpinner.setVisibility(View.GONE);
+                mMovieRecyclerView.setVisibility(GONE);
+                mProgressSpinner.setVisibility(GONE);
             }
         }
     }
@@ -110,19 +113,18 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public Loader<ArrayList<Movie>> onCreateLoader(int id, Bundle args) {
-        Log.d(TAG,"starting Loader");
         switch(id) {
             case(API_MOVIE_LOADER): {
-                    mNoInternetText.setVisibility(View.GONE);
-                    mMovieRecyclerView.setVisibility(View.GONE);
+                    mNoInternetText.setVisibility(GONE);
+                    mMovieRecyclerView.setVisibility(GONE);
+                    mNoFavoritesText.setVisibility(GONE);
                     mProgressSpinner.setVisibility(View.VISIBLE);
                     mApiMovieLoader = new ApiMovieLoader(this, mNoInternetText);
                     return mApiMovieLoader;
 
             } case(FAVORITES_MOVIE_LOADER): {
-                Log.d(TAG,"starting Loader " + FAVORITES_MOVIE_LOADER);
-                mNoInternetText.setVisibility(View.GONE);
-                mMovieRecyclerView.setVisibility(View.VISIBLE);
+                mNoInternetText.setVisibility(GONE);
+                mMovieRecyclerView.setVisibility(GONE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
                 mProviderMovieLoader = new ProviderMovieLoader(this);
                 return mProviderMovieLoader;
@@ -134,9 +136,7 @@ MovieAdapter.MovieClickListener{
 
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
-        Log.d(TAG,"onLoadFinished");
-        Log.d(TAG,"Number of movies: " + movies.size());
-        mProgressSpinner.setVisibility(View.GONE);
+        mProgressSpinner.setVisibility(GONE);
         int numberOfColumns = 2;
         for (Movie movie: movies) {
             Log.d(TAG,movie.getTitle());
@@ -144,7 +144,12 @@ MovieAdapter.MovieClickListener{
         mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
         mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
         mMovieRecyclerView.setAdapter(mAdapter);
-        Log.d(TAG,"getItemCount " + mAdapter.getItemCount());
+        if (movies.size() == 0 && mIsFavorites) {
+            mNoFavoritesText.setVisibility(View.VISIBLE);
+            mMovieRecyclerView.setVisibility(View.GONE);
+        } else {
+            mMovieRecyclerView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -174,31 +179,24 @@ MovieAdapter.MovieClickListener{
   @Override
     protected void onResume() {
         super.onResume();
-        Log.d(TAG,"onResume");
         boolean hasInternet = NetworkUtils.isConnectedToInternet(this);
         if (hasInternet) {
-            Log.d(TAG,"yes internet");
-            mNoInternetText.setVisibility(View.GONE);
+            mNoInternetText.setVisibility(GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
             if (mApiMovieLoader == null && !mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                Log.d(TAG,"has internet, not favorites");
                 getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else if (mProviderMovieLoader == null && mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                Log.d(TAG,"has internet, IS favorites");
                 getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         } else { //has no internet
             //not favorites, nothing to see:
-            Log.d(TAG,"no internet");
             if (!mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                Log.d(TAG,"no internet, not favorites");
                 mNoInternetText.setVisibility(View.VISIBLE);
-                mMovieRecyclerView.setVisibility(View.GONE);
+                mMovieRecyclerView.setVisibility(GONE);
             }
             //is favorites, can view offline:
             else if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                Log.d(TAG,"no internet, IS favorites");
-                mNoInternetText.setVisibility(View.GONE);
+                mNoInternetText.setVisibility(GONE);
                 mMovieRecyclerView.setVisibility(View.VISIBLE);
                 getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
