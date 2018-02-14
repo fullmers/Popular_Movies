@@ -122,7 +122,7 @@ MovieAdapter.MovieClickListener{
             } case(FAVORITES_MOVIE_LOADER): {
                 Log.d(TAG,"starting Loader " + FAVORITES_MOVIE_LOADER);
                 mNoInternetText.setVisibility(View.GONE);
-                mMovieRecyclerView.setVisibility(View.GONE);
+                mMovieRecyclerView.setVisibility(View.VISIBLE);
                 mProgressSpinner.setVisibility(View.VISIBLE);
                 mProviderMovieLoader = new ProviderMovieLoader(this);
                 return mProviderMovieLoader;
