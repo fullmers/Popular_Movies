@@ -42,13 +42,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimaryDark"
-            android:elevation="10dp"
+            android:elevation="@dimen/medium_padding"
             android:gravity="center"
-            android:paddingBottom="20dp"
-            android:paddingTop="20dp"
+            android:paddingBottom="@dimen/large_padding"
+            android:paddingTop="@dimen/large_padding"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="#FFF"
-            android:textSize="32sp"
+            android:textSize="@dimen/large_text_size"
             android:visibility="gone"
             tools:text="Chappie" />
 
@@ -57,7 +57,7 @@
             android:id="@+id/text_no_internet"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="5sp"
+            android:padding="@dimen/small_padding"
             android:text="@string/no_internet"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +67,7 @@
             android:id="@+id/constraint_layout_favorite_data"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="10dp"
+            android:padding="@dimen/medium_padding"
             tools:context="com.amiculous.popularmoviesi.MovieDetailActivity">
 
             <ImageView
@@ -82,8 +82,8 @@
             <android.support.constraint.ConstraintLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="20sp"
-                android:layout_marginStart="20sp"
+                android:layout_marginLeft="@dimen/large_padding"
+                android:layout_marginStart="@dimen/large_padding"
                 android:orientation="vertical"
                 app:layout_constraintStart_toEndOf="@id/image_movie_poster"
                 app:layout_constraintTop_toTopOf="parent">
@@ -120,7 +120,7 @@
                 android:id="@+id/text_overview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="20dp"
+                android:paddingTop="@dimen/large_padding"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/image_movie_poster"
@@ -133,19 +133,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="10dp">
+            android:padding="@dimen/medium_padding">
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/extra_small_padding"
                 android:background="@color/dividerColor"
-                android:paddingBottom="5dp" />
+                android:paddingBottom="@dimen/small_padding" />
 
             <TextView
                 android:id="@+id/text_trailers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/medium_padding"
                 android:text="@string/trailers"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -153,8 +153,8 @@
                 android:id="@+id/text_no_trailers"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/medium_padding"
                 android:text="@string/no_trailers"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:visibility="visible" />
@@ -167,16 +167,16 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="2dp"
+                android:layout_height="@dimen/extra_small_padding"
                 android:background="@color/dividerColor"
-                android:paddingBottom="5dp"
-                android:paddingTop="5dp" />
+                android:paddingBottom="@dimen/small_padding"
+                android:paddingTop="@dimen/small_padding" />
 
             <TextView
                 android:id="@+id/text_rviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="@dimen/medium_padding"
                 android:text="@string/reviews"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -184,8 +184,8 @@
                 android:id="@+id/text_no_reviews"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="5dp"
-                android:paddingBottom="10dp"
+                android:paddingTop="@dimen/small_padding"
+                android:paddingBottom="@dimen/medium_padding"
                 android:text="@string/no_reviews"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
                 android:visibility="visible" />

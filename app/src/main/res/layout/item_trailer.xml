@@ -2,12 +2,12 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="@dimen/trailer_item_height"
     android:orientation="horizontal">
 
     <ImageView
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="@dimen/play_icon_side"
+        android:layout_height="@dimen/play_icon_side"
         android:layout_gravity="center_vertical"
         android:adjustViewBounds="true"
         android:background="@drawable/ic_play_arrow_black_36dp" />
@@ -17,10 +17,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="25dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="25dp"
-        android:layout_marginStart="10dp"
+        android:layout_marginEnd="@dimen/large_padding"
+        android:layout_marginRight="@dimen/large_padding"
+        android:layout_marginLeft="@dimen/medium_padding"
+        android:layout_marginStart="@dimen/medium_padding"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"

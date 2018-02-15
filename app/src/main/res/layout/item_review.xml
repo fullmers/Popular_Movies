@@ -4,7 +4,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="15dp">
+    android:padding="@dimen/large_padding">
 
     <LinearLayout
         android:id="@+id/layout_author"
@@ -20,8 +20,8 @@
 
         <TextView
             android:id="@+id/text_author"
-            android:layout_marginLeft="5dp"
-            android:layout_marginStart="5dp"
+            android:layout_marginLeft="@dimen/small_padding"
+            android:layout_marginStart="@dimen/small_padding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textStyle="bold"
@@ -32,6 +32,6 @@
         android:id="@+id/text_review_content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="@dimen/small_padding"
         tools:text="@string/lorem_ipsum"/>
 </LinearLayout>

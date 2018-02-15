@@ -24,7 +24,7 @@
     <ProgressBar
         android:id="@+id/progress_spinner"
         android:visibility="gone"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/large_padding"
         android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -37,7 +37,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
-        android:padding="20dp"/>
+        android:padding="@dimen/large_padding"/>
 
     <TextView
         android:id="@+id/text_no_favorites"
@@ -47,6 +47,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:layout_gravity="center_horizontal"
         android:visibility="gone"
-        android:padding="20dp"/>
+        android:padding="@dimen/large_padding"/>
 
 </LinearLayout>
