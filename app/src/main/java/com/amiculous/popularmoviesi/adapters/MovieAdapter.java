@@ -60,6 +60,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
             File imageFile = ImageUtils.getImageFile(mContext,fileName);
             Picasso.with(mContext)
                     .load(imageFile)
+                    .error(R.drawable.missing_image)
                     .into(holder.mImagePoster);
         }
         else {
@@ -67,6 +68,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                     .getPosterPath(), mScreenWidthPx);
             Picasso.with(mContext)
                     .load(posterUrl)
+                    .error(R.drawable.missing_image)
                     .into(holder.mImagePoster);
         }
     }

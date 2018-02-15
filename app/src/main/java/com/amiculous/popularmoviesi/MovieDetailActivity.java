@@ -122,6 +122,7 @@ public class MovieDetailActivity extends AppCompatActivity
             mPosterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
             Picasso.with(this)
                     .load(mPosterUrl)
+                    .error(R.drawable.missing_image)
                     .into(ImageMoviePoster);
 
             getSupportLoaderManager()
@@ -131,6 +132,7 @@ public class MovieDetailActivity extends AppCompatActivity
             File imageFile = ImageUtils.getImageFile(this,fileName);
             Picasso.with(this)
                     .load(imageFile)
+                    .error(R.drawable.missing_image)
                     .into(ImageMoviePoster);
 
             TvNoInternet.setVisibility(View.VISIBLE);
@@ -218,6 +220,7 @@ public class MovieDetailActivity extends AppCompatActivity
         if (NetworkUtils.isConnectedToInternet(getApplicationContext()) && mPosterUrl != null) {
             Picasso.with(this)
                     .load(mPosterUrl)
+                    .error(R.drawable.missing_image)
                     .into(ImageUtils.picassoImageTarget(this,mImageFileName));
         }
 
