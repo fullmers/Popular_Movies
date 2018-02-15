@@ -50,6 +50,7 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
         int movieTitleIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_TITLE);
         int movieIdIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_ID);
         int moviePosterIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_POSTER_URI);
+        int movieBackdropIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_BACKDROP_URI);
         int movieOverviewIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_OVERVIEW);
         int movieVoteAverageIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE);
         int movieReleaseDateIndex= mCursor.getColumnIndex(FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE);
@@ -59,11 +60,12 @@ public class ProviderMovieLoader extends AsyncTaskLoader<ArrayList<Movie>> {
             String movieTitle = mCursor.getString(movieTitleIndex);
             int movieId = mCursor.getInt(movieIdIndex);
             String moviePoster = mCursor.getString(moviePosterIndex);
+            String movieBackdrop = mCursor.getString(movieBackdropIndex);
             String movieOverview = mCursor.getString(movieOverviewIndex);
             double movieVoteAverage = mCursor.getDouble(movieVoteAverageIndex);
             String movieReleaseDate = mCursor.getString(movieReleaseDateIndex);
 
-            Movie movie = new Movie(movieId, movieVoteAverage, movieTitle, moviePoster, movieOverview, movieReleaseDate);
+            Movie movie = new Movie(movieId, movieVoteAverage, movieTitle, moviePoster, movieBackdrop, movieOverview, movieReleaseDate);
             favoriteMovies.add(movie);
             Log.d(TAG,movieTitle + " " + movieId);
         }

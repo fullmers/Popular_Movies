@@ -13,7 +13,7 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
 
     public static final String DATABASE_NAME = "favorite_movies.db";
 
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     public FavoriteMoviesDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -28,6 +28,7 @@ public class FavoriteMoviesDbHelper extends SQLiteOpenHelper {
                     FavoritesEntry.COLUMN_MOVIE_ID + " INTEGER NOT NULL," +
                     FavoritesEntry.COLUMN_MOVIE_TITLE   + " TEXT NOT NULL, " +
                     FavoritesEntry.COLUMN_MOVIE_POSTER_URI   + " TEXT NOT NULL, " +
+                    FavoritesEntry.COLUMN_MOVIE_BACKDROP_URI   + " TEXT NOT NULL, " +
                     FavoritesEntry.COLUMN_MOVIE_OVERVIEW   + " TEXT NOT NULL, " +
                     FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE + " REAL NOT NULL, " +
                     FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE    + " TEXT NOT NULL" +

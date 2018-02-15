@@ -59,6 +59,7 @@ public class FavoriteMoviesProvider extends ContentProvider {
                         FavoritesEntry.COLUMN_MOVIE_ID,
                         FavoritesEntry.COLUMN_MOVIE_TITLE,
                         FavoritesEntry.COLUMN_MOVIE_POSTER_URI,
+                        FavoritesEntry.COLUMN_MOVIE_BACKDROP_URI,
                         FavoritesEntry.COLUMN_MOVIE_OVERVIEW,
                         FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE,
                         FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE

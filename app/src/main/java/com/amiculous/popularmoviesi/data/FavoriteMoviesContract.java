@@ -24,6 +24,7 @@ public class FavoriteMoviesContract {
         public static final String COLUMN_MOVIE_ID = "movie_id"; //returned by API
         public static final String COLUMN_MOVIE_TITLE = "movie_title";
         public static final String COLUMN_MOVIE_POSTER_URI = "movie_poster_uri";
+        public static final String COLUMN_MOVIE_BACKDROP_URI = "movie_backdrop_uri";
         public static final String COLUMN_MOVIE_OVERVIEW = "movie_overview";
         public static final String COLUMN_MOVIE_VOTE_AVERAGE = "movie_vote_average";
         public static final String COLUMN_MOVIE_RELEASE_DATE = "movie_release_date";
