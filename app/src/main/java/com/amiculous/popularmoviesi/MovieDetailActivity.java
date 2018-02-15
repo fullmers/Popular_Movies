@@ -14,8 +14,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -54,6 +54,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
     private String mImageFileName;
+    private boolean mIsFavorite;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -63,7 +64,6 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
     @BindView(R.id.constraint_layout_favorite_data) ConstraintLayout ClFavoriteData;
     @BindView(R.id.linear_layout_requires_internet) LinearLayout LlRequiresInternet;
-    @BindView(R.id.chbx_favorite) CheckBox CbFavorite;
     @BindView(R.id.rvTrailers) RecyclerView RvVideos;
     @BindView(R.id.rvReviews) RecyclerView RvReviews;
     @BindView(R.id.text_no_reviews) TextView TvNoReviews;
@@ -98,11 +98,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitle(mMovie.getTitle());
-        boolean isFavorite = isFavorite();
-        if (isFavorite) {
-            CbFavorite.setChecked(true);
+        mIsFavorite = isFavorite();
+        if (mIsFavorite) {
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
         } else {
-            CbFavorite.setChecked(false);
+            fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
         }
 
         boolean hasInternet = NetworkUtils.isConnectedToInternet(getApplicationContext());
@@ -116,7 +116,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                     .into(ImageMoviePoster);
 
             getSupportLoaderManager().initLoader(0, null, MovieDetailActivity.this).forceLoad();
-        } else if (isFavorite) { //no internet but is favorite
+        } else if (mIsFavorite) { //no internet but is favorite
             String fileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
             File imageFile = ImageUtils.getImageFile(this,fileName);
             Picasso.with(this)
@@ -132,19 +132,21 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             LlRequiresInternet.setVisibility(View.GONE);
         }
 
-        CbFavorite.setOnClickListener(new View.OnClickListener() {
+        fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean checked = ((CheckBox) v).isChecked();
-                if (checked) {
+                if (!mIsFavorite) {
                     if (NetworkUtils.isConnectedToInternet(getApplicationContext()) && mPosterUrl != null) {
                         insertInFavoriteMovies();
+                        ((FloatingActionButton) v).setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+                        mIsFavorite = true;
                     } else {
                         Toast.makeText(MovieDetailActivity.this,"Cannot Favorite movie while offline",Toast.LENGTH_SHORT).show();
-                        ((CheckBox) v).setChecked(false);
                     }
                 } else {
                     deleteFromFavoriteMovies();
+                    ((FloatingActionButton) v).setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                    mIsFavorite = false;
                 }
             }
         });
@@ -176,6 +178,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
 
 
     public void insertInFavoriteMovies() {
+        Log.d(TAG,"insertInFavorites");
         ContentValues contentValues= new ContentValues();
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
@@ -194,6 +197,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     }
 
     public void deleteFromFavoriteMovies() {
+        Log.d(TAG,"deleteFromFavoriteMovies");
         getContentResolver().delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
         ImageUtils.deleteImageFile(this,mImageFileName);
     }

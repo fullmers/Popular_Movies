@@ -113,16 +113,6 @@
                     app:layout_constraintStart_toEndOf="@id/text_user_rating"
                     app:layout_constraintTop_toBottomOf="@id/text_release_date" />
 
-                <CheckBox
-                    android:id="@+id/chbx_favorite"
-                    style="?android:attr/starStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/mark_as_favorite"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/text_user_rating" />
-
             </android.support.constraint.ConstraintLayout>
 
             <TextView
@@ -217,6 +207,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:src="@android:drawable/btn_star_big_off" />
+        android:src="@drawable/ic_favorite_border_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>
