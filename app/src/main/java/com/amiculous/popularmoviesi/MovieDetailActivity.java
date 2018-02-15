@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -62,12 +63,11 @@ public class MovieDetailActivity extends AppCompatActivity
     private int mScrollPosition;
     private Bundle mSavedInstanceState;
 
-    @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
     @BindView(R.id.text_user_rating) TextView TvUserRating;
     @BindView(R.id.text_overview) TextView TvOverview;
     @BindView(R.id.text_no_internet) TextView TvNoInternet;
-    @BindView(R.id.image_movie_poster) ImageView ImageMoviePoster;
+    @BindView(R.id.image_backdrop) ImageView ImageBackdrop;
     @BindView(R.id.constraint_layout_favorite_data) ConstraintLayout ClFavoriteData;
     @BindView(R.id.linear_layout_requires_internet) LinearLayout LlRequiresInternet;
     @BindView(R.id.rvTrailers) RecyclerView RvVideos;
@@ -78,6 +78,7 @@ public class MovieDetailActivity extends AppCompatActivity
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.nested_scroll_view) NestedScrollView nestedScrollView;
     @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
+    @BindView(R.id.collapsing_toolbar) CollapsingToolbarLayout collapsingToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +102,6 @@ public class MovieDetailActivity extends AppCompatActivity
     }
 
     private void setupUI() {
-        TvMovieTitle.setText(mMovie.getTitle());
         TvReleaseDate.setText(getReleaseYear());
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
@@ -109,6 +109,7 @@ public class MovieDetailActivity extends AppCompatActivity
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         toolbar.setTitle(mMovie.getTitle());
+        collapsingToolbar.setTitle(mMovie.getTitle());
         mIsFavorite = isFavorite();
         if (mIsFavorite) {
             fab.setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
@@ -123,20 +124,21 @@ public class MovieDetailActivity extends AppCompatActivity
             LlRequiresInternet.setVisibility(View.VISIBLE);
             mPosterUrl = NetworkUtils.buildMovieImageUrl(mMovie.getPosterPath(),mScreenWidth);
             mBackdropUrl = NetworkUtils.buildMovieImageUrl(mMovie.getBackdropPath(),mScreenWidth);
+
             Picasso.with(this)
-                    .load(mPosterUrl)
+                    .load(mBackdropUrl)
                     .error(R.drawable.missing_image)
-                    .into(ImageMoviePoster);
+                    .into(ImageBackdrop);
 
             getSupportLoaderManager()
                     .initLoader(0, null, MovieDetailActivity.this).forceLoad();
         } else if (mIsFavorite) { //no internet but is favorite
-            String fileName = ImageUtils.getMovieImageFileName(mMovie.getTitle(), ImageUtils.ImageType.POSTER);
-            File imageFile = ImageUtils.getImageFile(this,fileName);
+            String backdropFileName = ImageUtils.getMovieImageFileName(mMovie.getTitle(), ImageUtils.ImageType.BACKDROP);
+            File backdropFile = ImageUtils.getImageFile(this,backdropFileName);
             Picasso.with(this)
-                    .load(imageFile)
+                    .load(backdropFile)
                     .error(R.drawable.missing_image)
-                    .into(ImageMoviePoster);
+                    .into(ImageBackdrop);
 
             TvNoInternet.setVisibility(View.VISIBLE);
             ClFavoriteData.setVisibility(View.VISIBLE);

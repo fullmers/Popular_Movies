@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Popular Movies I</string>
+    <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
 
 
@@ -34,6 +34,8 @@
     <string name="pref_sort_by_favorites" translatable="false">favorites</string>
 
     <!-- ******************* MovieDetailsActivity strings ******************* -->
+    <string name="released">Released </string>
+    <string name="average_rating">Average rating: </string>
     <string name="out_of_ten">/10</string>
     <string name="mark_as_favorite">Mark as favorite</string>
     <string name="unmark_as_favorite">Unmark as favorite</string>
