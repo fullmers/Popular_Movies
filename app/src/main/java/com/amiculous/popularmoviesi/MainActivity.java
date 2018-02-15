@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
@@ -44,6 +45,8 @@ MovieAdapter.MovieClickListener{
     private MovieAdapter mAdapter;
     private ApiMovieLoader mApiMovieLoader;
     private ProviderMovieLoader mProviderMovieLoader;
+    private GridLayoutManager mGridLayoutManager;
+    private Bundle mSavedInstanceState;
     private boolean mIsFavorites;
 
     @BindView(R.id.rvMovies) RecyclerView mMovieRecyclerView;
@@ -62,20 +65,35 @@ MovieAdapter.MovieClickListener{
         mPrefChangeListener = new PreferenceChangeListener();
         mPrefs.registerOnSharedPreferenceChangeListener(mPrefChangeListener);
 
-        mCurrentSortPref = mPrefs.getString(getString(R.string.pref_sort_by_key), "");
-        if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-            mIsFavorites = true;
-            getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
-        }
-        else {
-            mIsFavorites = false;
-            if (NetworkUtils.isConnectedToInternet(this)) {
-            getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+        mSavedInstanceState = savedInstanceState;
+
+            mCurrentSortPref = mPrefs.getString(getString(R.string.pref_sort_by_key), "");
+            if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+                mIsFavorites = true;
+                getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else {
-                mNoInternetText.setVisibility(View.VISIBLE);
-                mMovieRecyclerView.setVisibility(GONE);
-                mProgressSpinner.setVisibility(GONE);
+                mIsFavorites = false;
+                if (NetworkUtils.isConnectedToInternet(this)) {
+                    getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                } else {
+                    mNoInternetText.setVisibility(View.VISIBLE);
+                    mMovieRecyclerView.setVisibility(GONE);
+                    mProgressSpinner.setVisibility(GONE);
+                }
             }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null && mGridLayoutManager!= null) {
+            int lastPosition;
+            if (getResources().getConfiguration().orientation == ORIENTATION_LANDSCAPE) {
+                lastPosition = mGridLayoutManager.findFirstVisibleItemPosition();
+            } else {
+                lastPosition = mGridLayoutManager.findFirstCompletelyVisibleItemPosition();
+            }
+            outState.putInt(getString(R.string.last_position_key),lastPosition);
         }
     }
 
@@ -137,13 +155,10 @@ MovieAdapter.MovieClickListener{
     @Override
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
         mProgressSpinner.setVisibility(GONE);
-        Log.d(TAG,"onLoadFinished");
         int numberOfColumns = 2;
-        for (Movie movie: movies) {
-            Log.d(TAG,movie.getTitle());
-        }
         mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
-        mMovieRecyclerView.setLayoutManager(new GridLayoutManager(this, numberOfColumns));
+        mGridLayoutManager = new GridLayoutManager(this, numberOfColumns);
+        mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieRecyclerView.setAdapter(mAdapter);
         if (movies.size() == 0 && mIsFavorites) {
             mNoFavoritesText.setVisibility(View.VISIBLE);
@@ -151,6 +166,14 @@ MovieAdapter.MovieClickListener{
         } else {
             mMovieRecyclerView.setVisibility(View.VISIBLE);
             mAdapter.notifyDataSetChanged();
+        }
+
+        //It does not work to put this in onCreate or onRestoreInstance state
+        //It must go here because of the time the loader takes:
+        if (mSavedInstanceState != null && mGridLayoutManager != null) {
+            int lastPosition = mSavedInstanceState.getInt(getString(R.string.last_position_key));
+            mGridLayoutManager.scrollToPosition(lastPosition);
+            mMovieRecyclerView.scrollToPosition(lastPosition);
         }
     }
 
@@ -178,7 +201,7 @@ MovieAdapter.MovieClickListener{
         mPrefs.unregisterOnSharedPreferenceChangeListener(mPrefChangeListener);
     }
 
-  @Override
+    @Override
     protected void onResume() {
         super.onResume();
         boolean hasInternet = NetworkUtils.isConnectedToInternet(this);

@@ -10,6 +10,7 @@
     <string name="no_internet">No internet connection. Please connect and try again.</string>
     <string name="screen_width_extra_key">screen_width</string>
     <string name="no_favorites">No favorite movies have been selected yet.</string>
+    <string name="last_position_key">last_position_key</string>
 
     <!-- ******************* Settings ******************* -->
     <string name="title_activity_settings">Settings</string>
