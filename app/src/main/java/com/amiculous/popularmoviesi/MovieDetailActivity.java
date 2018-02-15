@@ -6,7 +6,9 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.NestedScrollView;
@@ -58,6 +60,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private boolean mIsFavorite;
     private int mScrollPosition;
     private Bundle mSavedInstanceState;
+    private Snackbar mSnackbar;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -74,6 +77,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.nested_scroll_view) NestedScrollView nestedScrollView;
+    @BindView(R.id.coordinator_layout) CoordinatorLayout coordinatorLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -163,13 +167,13 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 mScrollPosition = scrollY;
             }
         });
+
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         if (outState != null && nestedScrollView != null) {
-            Log.d(TAG,"onSaveInstanceState: " + mScrollPosition);
             outState.putInt(getString(R.string.last_position_key),mScrollPosition);
         }
     }
@@ -198,9 +202,7 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         return isFavorite;
     }
 
-
     public void insertInFavoriteMovies() {
-        Log.d(TAG,"insertInFavorites");
         ContentValues contentValues= new ContentValues();
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
@@ -216,12 +218,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                     .load(mPosterUrl)
                     .into(ImageUtils.picassoImageTarget(this,mImageFileName));
         }
+
+        mSnackbar = Snackbar.make(coordinatorLayout,R.string.added_to_favorites,Snackbar.LENGTH_SHORT);
+        mSnackbar.show();
     }
 
     public void deleteFromFavoriteMovies() {
-        Log.d(TAG,"deleteFromFavoriteMovies");
         getContentResolver().delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
         ImageUtils.deleteImageFile(this,mImageFileName);
+        mSnackbar = Snackbar.make(coordinatorLayout,R.string.removed_from_favorites,Snackbar.LENGTH_SHORT);
+        mSnackbar.show();
     }
 
     private String getReleaseYear() {

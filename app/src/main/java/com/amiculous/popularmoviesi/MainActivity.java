@@ -174,7 +174,7 @@ MovieAdapter.MovieClickListener{
         }
 
         //It does not work to put this in onCreate or onRestoreInstance state
-        //It must go here because of the time the loader takes:
+        //It must go here, likely because of the time the loader takes:
         if (mSavedInstanceState != null && mGridLayoutManager != null) {
             int lastPosition = mSavedInstanceState.getInt(getString(R.string.last_position_key));
             mGridLayoutManager.scrollToPosition(lastPosition);
