@@ -17,7 +17,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -44,8 +43,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MovieDetailActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<MovieExtras>,
-        VideoAdapter.VideoClickListener {
+public class MovieDetailActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<MovieExtras>, VideoAdapter.VideoClickListener {
 
     private Movie mMovie;
     private int mScreenWidth;
@@ -125,7 +124,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                     .load(mPosterUrl)
                     .into(ImageMoviePoster);
 
-            getSupportLoaderManager().initLoader(0, null, MovieDetailActivity.this).forceLoad();
+            getSupportLoaderManager()
+                    .initLoader(0, null, MovieDetailActivity.this).forceLoad();
         } else if (mIsFavorite) { //no internet but is favorite
             String fileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
             File imageFile = ImageUtils.getImageFile(this,fileName);
@@ -148,14 +148,16 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 if (!mIsFavorite) {
                     if (NetworkUtils.isConnectedToInternet(getApplicationContext()) && mPosterUrl != null) {
                         insertInFavoriteMovies();
-                        ((FloatingActionButton) v).setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
+                        ((FloatingActionButton) v).setImageDrawable(
+                                getResources().getDrawable(R.drawable.ic_favorite_white_24dp));
                         mIsFavorite = true;
                     } else {
                         Toast.makeText(MovieDetailActivity.this,"Cannot Favorite movie while offline",Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     deleteFromFavoriteMovies();
-                    ((FloatingActionButton) v).setImageDrawable(getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
+                    ((FloatingActionButton) v).setImageDrawable(
+                            getResources().getDrawable(R.drawable.ic_favorite_border_white_24dp));
                     mIsFavorite = false;
                 }
             }
@@ -219,15 +221,18 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                     .into(ImageUtils.picassoImageTarget(this,mImageFileName));
         }
 
-        mSnackbar = Snackbar.make(coordinatorLayout,R.string.added_to_favorites,Snackbar.LENGTH_SHORT);
-        mSnackbar.show();
+        Snackbar insertionSnackbar =
+                Snackbar.make(coordinatorLayout,R.string.added_to_favorites,Snackbar.LENGTH_SHORT);
+        insertionSnackbar.show();
     }
 
     public void deleteFromFavoriteMovies() {
-        getContentResolver().delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
+        getContentResolver()
+                .delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
         ImageUtils.deleteImageFile(this,mImageFileName);
-        mSnackbar = Snackbar.make(coordinatorLayout,R.string.removed_from_favorites,Snackbar.LENGTH_SHORT);
-        mSnackbar.show();
+        Snackbar deletionSnackbar =
+                Snackbar.make(coordinatorLayout,R.string.removed_from_favorites,Snackbar.LENGTH_SHORT);
+        deletionSnackbar.show();
     }
 
     private String getReleaseYear() {
@@ -251,7 +256,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         } else {
             RvVideos.setVisibility(View.VISIBLE);
             TvNoTrailers.setVisibility(View.GONE);
-            LinearLayoutManager videoLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            LinearLayoutManager videoLayoutManager =
+                    new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             RvVideos.setLayoutManager(videoLayoutManager);
             DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(
                     RvVideos.getContext(),
@@ -269,7 +275,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         } else {
             RvReviews.setVisibility(View.VISIBLE);
             TvNoReviews.setVisibility(View.GONE);
-            LinearLayoutManager reviewLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+            LinearLayoutManager reviewLayoutManager =
+                    new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
             RvReviews.setLayoutManager(reviewLayoutManager);
             DividerItemDecoration reviewDividerItemDecoration = new DividerItemDecoration(
                     RvReviews.getContext(),

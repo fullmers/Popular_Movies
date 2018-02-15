@@ -32,8 +32,8 @@ import butterknife.ButterKnife;
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static android.view.View.GONE;
 
-public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>,
-MovieAdapter.MovieClickListener{
+public class MainActivity extends AppCompatActivity
+        implements LoaderManager.LoaderCallbacks<ArrayList<Movie>>, MovieAdapter.MovieClickListener{
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final int API_MOVIE_LOADER = 0;
@@ -102,17 +102,20 @@ MovieAdapter.MovieClickListener{
         }
     }
 
-    private class PreferenceChangeListener implements SharedPreferences.OnSharedPreferenceChangeListener {
+    private class PreferenceChangeListener
+            implements SharedPreferences.OnSharedPreferenceChangeListener {
         @Override
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
             mCurrentSortPref = prefs.getString(key, "");
             if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
                 mIsFavorites = true;
-                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                getSupportLoaderManager()
+                        .restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
             else {
                 mIsFavorites = false;
-                getSupportLoaderManager().restartLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                getSupportLoaderManager()
+                        .restartLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         }
     }
@@ -161,7 +164,8 @@ MovieAdapter.MovieClickListener{
     public void onLoadFinished(Loader<ArrayList<Movie>> loader, ArrayList<Movie> movies) {
         mProgressSpinner.setVisibility(GONE);
         int numberOfColumns = 2;
-        mAdapter = new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
+        mAdapter =
+                new MovieAdapter(this, this, movies, mScreenWidthPx, mIsFavorites);
         mGridLayoutManager = new GridLayoutManager(this, numberOfColumns);
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieRecyclerView.setAdapter(mAdapter);
@@ -214,9 +218,11 @@ MovieAdapter.MovieClickListener{
             mNoInternetText.setVisibility(GONE);
             mMovieRecyclerView.setVisibility(View.VISIBLE);
             if (!mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                getSupportLoaderManager()
+                        .initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                getSupportLoaderManager()
+                        .restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         } else { //has no internet
             //not favorites, nothing to see:
@@ -228,7 +234,8 @@ MovieAdapter.MovieClickListener{
             else if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
                 mNoInternetText.setVisibility(GONE);
                 mMovieRecyclerView.setVisibility(View.VISIBLE);
-                getSupportLoaderManager().restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+                getSupportLoaderManager()
+                        .restartLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             }
         }
     }

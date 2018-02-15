@@ -37,7 +37,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
         void onMovieClick(Movie movie);
     }
 
-    public MovieAdapter(Context context, MovieClickListener movieClickListener, ArrayList<Movie> movies, int screenWidthPx, boolean isFavorite) {
+    public MovieAdapter(Context context, MovieClickListener movieClickListener,
+                        ArrayList<Movie> movies, int screenWidthPx, boolean isFavorite) {
         this.mContext = context;
         this.mMovies = movies;
         this.mClickListener = movieClickListener;
@@ -47,7 +48,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(mContext).inflate(R.layout.item_movie, parent, false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_movie,
+                parent, false);
         return new ViewHolder(view);
     }
 
@@ -61,7 +63,8 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                     .into(holder.mImagePoster);
         }
         else {
-            String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovies.get(position).getPosterPath(), mScreenWidthPx);
+            String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovies.get(position)
+                    .getPosterPath(), mScreenWidthPx);
             Picasso.with(mContext)
                     .load(posterUrl)
                     .into(holder.mImagePoster);

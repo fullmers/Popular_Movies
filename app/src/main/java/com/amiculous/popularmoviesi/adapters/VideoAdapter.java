@@ -29,7 +29,8 @@ public class VideoAdapter extends RecyclerView.Adapter<VideoAdapter.ViewHolder> 
         void onMovieClick(MovieVideo video);
     }
 
-    public VideoAdapter(Context context, VideoClickListener videoClickListener, ArrayList<MovieVideo> videos) {
+    public VideoAdapter(Context context, VideoClickListener videoClickListener,
+                        ArrayList<MovieVideo> videos) {
         this.mContext = context;
         this.mVideos = videos;
         this.mClickListener = videoClickListener;
