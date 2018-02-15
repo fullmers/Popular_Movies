@@ -9,6 +9,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -55,6 +56,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     private ReviewAdapter mReviewAdapter;
     private String mImageFileName;
     private boolean mIsFavorite;
+    private int mScrollPosition;
+    private Bundle mSavedInstanceState;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -70,12 +73,15 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.text_no_trailers) TextView TvNoTrailers;
     @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.nested_scroll_view) NestedScrollView nestedScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
         ButterKnife.bind(this);
+
+        mSavedInstanceState = savedInstanceState;
 
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
@@ -150,6 +156,22 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 }
             }
         });
+
+        nestedScrollView.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
+            @Override
+            public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                mScrollPosition = scrollY;
+            }
+        });
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        if (outState != null && nestedScrollView != null) {
+            Log.d(TAG,"onSaveInstanceState: " + mScrollPosition);
+            outState.putInt(getString(R.string.last_position_key),mScrollPosition);
+        }
     }
 
     @Override
@@ -250,6 +272,11 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
             mReviewAdapter = new ReviewAdapter(this, reviews);
             RvReviews.setAdapter(mReviewAdapter);
             RvReviews.setNestedScrollingEnabled(false);
+        }
+
+        if (mSavedInstanceState != null && nestedScrollView != null) {
+            int lastPosition = mSavedInstanceState.getInt(getString(R.string.last_position_key));
+            nestedScrollView.scrollTo(0,lastPosition);
         }
     }
 
