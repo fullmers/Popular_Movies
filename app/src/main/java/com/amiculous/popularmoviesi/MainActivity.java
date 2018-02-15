@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.preference.PreferenceManager;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -53,6 +53,7 @@ MovieAdapter.MovieClickListener{
     @BindView(R.id.progress_spinner) ProgressBar mProgressSpinner;
     @BindView(R.id.text_no_internet) TextView mNoInternetText;
     @BindView(R.id.text_no_favorites) TextView mNoFavoritesText;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,20 +68,24 @@ MovieAdapter.MovieClickListener{
 
         mSavedInstanceState = savedInstanceState;
 
-            mCurrentSortPref = mPrefs.getString(getString(R.string.pref_sort_by_key), "");
-            if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
-                mIsFavorites = true;
-                getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+        setSupportActionBar(toolbar);
+        toolbar.setTitleTextColor(getResources().getColor(R.color.white));
+        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.ic_settings_white_24dp));
+
+        mCurrentSortPref = mPrefs.getString(getString(R.string.pref_sort_by_key), "");
+        if (mCurrentSortPref.equals(getString(R.string.pref_sort_by_favorites))) {
+            mIsFavorites = true;
+            getSupportLoaderManager().initLoader(FAVORITES_MOVIE_LOADER, null, MainActivity.this).forceLoad();
+        } else {
+            mIsFavorites = false;
+            if (NetworkUtils.isConnectedToInternet(this)) {
+                getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
             } else {
-                mIsFavorites = false;
-                if (NetworkUtils.isConnectedToInternet(this)) {
-                    getSupportLoaderManager().initLoader(API_MOVIE_LOADER, null, MainActivity.this).forceLoad();
-                } else {
-                    mNoInternetText.setVisibility(View.VISIBLE);
-                    mMovieRecyclerView.setVisibility(GONE);
-                    mProgressSpinner.setVisibility(GONE);
-                }
+                mNoInternetText.setVisibility(View.VISIBLE);
+                mMovieRecyclerView.setVisibility(GONE);
+                mProgressSpinner.setVisibility(GONE);
             }
+        }
     }
 
     @Override
