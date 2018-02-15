@@ -6,13 +6,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -67,6 +68,8 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
     @BindView(R.id.rvReviews) RecyclerView RvReviews;
     @BindView(R.id.text_no_reviews) TextView TvNoReviews;
     @BindView(R.id.text_no_trailers) TextView TvNoTrailers;
+    @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.fab) FloatingActionButton fab;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,6 +94,10 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
         TvReleaseDate.setText(getReleaseYear());
         TvUserRating.setText(Double.toString(mMovie.getVoteAverage()));
         TvOverview.setText(mMovie.getOverview());
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        toolbar.setTitle(mMovie.getTitle());
         boolean isFavorite = isFavorite();
         if (isFavorite) {
             CbFavorite.setChecked(true);
@@ -141,6 +148,13 @@ public class MovieDetailActivity extends AppCompatActivity implements LoaderMana
                 }
             }
         });
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        //https://stackoverflow.com/questions/26651602/display-back-arrow-on-toolbar-android
+        onBackPressed();
+        return true;
     }
 
     public boolean isFavorite() {
