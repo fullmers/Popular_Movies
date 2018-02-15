@@ -46,23 +46,24 @@ public class NetworkUtils {
     private static final String IMAGE_WIDTH_500 = "w500";
     private static final String IMAGE_WIDTH_780 = "w780";
 
-    public static String buildMoviePosterUrl(String posterPath, int deviceWidthPx) {
+    public static String buildMovieImageUrl(String imagePath, int deviceWidthPx) {
         //use the image width that is less than half of the screen width, rounding down
         //ie, the image will either be half the screen width or slightly less
+        //imagePath can be either poster_path or backdrop_path
         if (deviceWidthPx >= 1560) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_780 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_780 + imagePath;
         } else if (deviceWidthPx < 1560 && deviceWidthPx >= 1000) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_500 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_500 + imagePath;
         } else if (deviceWidthPx < 1000 && deviceWidthPx >= 684) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_342 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_342 + imagePath;
         } else if (deviceWidthPx < 1000 && deviceWidthPx >= 684) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_342 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_342 + imagePath;
         } else if (deviceWidthPx < 684 && deviceWidthPx >= 370) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_185 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_185 + imagePath;
         } else if (deviceWidthPx < 370 && deviceWidthPx >= 308) {
-            return IMAGE_BASE_URL + IMAGE_WIDTH_154 + posterPath;
+            return IMAGE_BASE_URL + IMAGE_WIDTH_154 + imagePath;
         } else { //deviceWidthPx < 308
-                return IMAGE_BASE_URL + IMAGE_WIDTH_92 + posterPath;
+                return IMAGE_BASE_URL + IMAGE_WIDTH_92 + imagePath;
         }
     }
 

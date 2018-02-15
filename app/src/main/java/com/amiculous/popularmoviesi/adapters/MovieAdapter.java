@@ -56,7 +56,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         if (mIsFavorite) {
-            String fileName = ImageUtils.getMoviePosterFileName(mMovies.get(position).getTitle());
+            String fileName = ImageUtils.getMovieImageFileName(mMovies.get(position).getTitle(), ImageUtils.ImageType.POSTER);
             File imageFile = ImageUtils.getImageFile(mContext,fileName);
             Picasso.with(mContext)
                     .load(imageFile)
@@ -64,7 +64,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
                     .into(holder.mImagePoster);
         }
         else {
-            String posterUrl = NetworkUtils.buildMoviePosterUrl(mMovies.get(position)
+            String posterUrl = NetworkUtils.buildMovieImageUrl(mMovies.get(position)
                     .getPosterPath(), mScreenWidthPx);
             Picasso.with(mContext)
                     .load(posterUrl)

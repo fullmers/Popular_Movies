@@ -22,6 +22,8 @@ public class ImageUtils {
     private static final String TAG = ImageUtils.class.getSimpleName();
 
     public static final String IMAGE_DIR = "imageDir";
+    public static final String POSTER_FILENAME = "_poster";
+    public static final String BACKDROP_FILENAME = "_backdrop";
 
     //http://www.codexpedia.com/android/android-download-and-save-image-through-picasso/
     public static Target picassoImageTarget(final Context context, final String imageName) {
@@ -66,7 +68,11 @@ public class ImageUtils {
         };
     }
 
-    public static String getMoviePosterFileName(String movieTitle) {
+    public enum ImageType {
+        POSTER, BACKDROP
+    }
+
+    public static String getMovieImageFileName(String movieTitle, ImageType imageType) {
         //Remove all chars that are not allowed in filename
         //https://en.wikipedia.org/wiki/Filename
         String fileName = movieTitle.replace("/","");
@@ -82,6 +88,17 @@ public class ImageUtils {
         fileName = fileName.replace(".","");
 
         fileName = fileName.replace(" ","_");
+
+        switch(imageType) {
+            case POSTER: {
+                fileName = fileName + POSTER_FILENAME;
+                break;
+            }
+            case BACKDROP: {
+                fileName = fileName + BACKDROP_FILENAME;
+                break;
+            }
+        }
 
         fileName = fileName + ".png";
 

@@ -49,17 +49,18 @@ public class MovieDetailActivity extends AppCompatActivity
     private Movie mMovie;
     private int mScreenWidth;
     private String mPosterUrl;
+    private String mBackdropUrl;
     private Uri mUri;
     private MovieExtrasLoader mMovieExtrasLoader;
     private int movieId;
     private static final String TAG = MovieDetailActivity.class.getSimpleName();
     private VideoAdapter mVideoAdapter;
     private ReviewAdapter mReviewAdapter;
-    private String mImageFileName;
+    private String mPosterFileName;
+    private String mBackdropFileName;
     private boolean mIsFavorite;
     private int mScrollPosition;
     private Bundle mSavedInstanceState;
-    private Snackbar mSnackbar;
 
     @BindView(R.id.text_movie_title) TextView TvMovieTitle;
     @BindView(R.id.text_release_date) TextView TvReleaseDate;
@@ -91,7 +92,8 @@ public class MovieDetailActivity extends AppCompatActivity
             mMovie = extras.getParcelable(getString(R.string.movie_extra_key));
             mScreenWidth = extras.getInt(getString(R.string.screen_width_extra_key));
             movieId = mMovie.getId();
-            mImageFileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
+            mPosterFileName = ImageUtils.getMovieImageFileName(mMovie.getTitle(), ImageUtils.ImageType.POSTER);
+            mBackdropFileName = ImageUtils.getMovieImageFileName(mMovie.getTitle(), ImageUtils.ImageType.BACKDROP);
             mUri= FavoriteMoviesContract.FavoritesEntry.buildMovieUriWithId(mMovie.getId());
 
             setupUI();
@@ -119,7 +121,8 @@ public class MovieDetailActivity extends AppCompatActivity
             TvNoInternet.setVisibility(View.GONE);
             ClFavoriteData.setVisibility(View.VISIBLE);
             LlRequiresInternet.setVisibility(View.VISIBLE);
-            mPosterUrl = NetworkUtils.buildMoviePosterUrl(mMovie.getPosterPath(),mScreenWidth);
+            mPosterUrl = NetworkUtils.buildMovieImageUrl(mMovie.getPosterPath(),mScreenWidth);
+            mBackdropUrl = NetworkUtils.buildMovieImageUrl(mMovie.getBackdropPath(),mScreenWidth);
             Picasso.with(this)
                     .load(mPosterUrl)
                     .error(R.drawable.missing_image)
@@ -128,7 +131,7 @@ public class MovieDetailActivity extends AppCompatActivity
             getSupportLoaderManager()
                     .initLoader(0, null, MovieDetailActivity.this).forceLoad();
         } else if (mIsFavorite) { //no internet but is favorite
-            String fileName = ImageUtils.getMoviePosterFileName(mMovie.getTitle());
+            String fileName = ImageUtils.getMovieImageFileName(mMovie.getTitle(), ImageUtils.ImageType.POSTER);
             File imageFile = ImageUtils.getImageFile(this,fileName);
             Picasso.with(this)
                     .load(imageFile)
@@ -211,17 +214,26 @@ public class MovieDetailActivity extends AppCompatActivity
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_ID, mMovie.getId());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_TITLE, mMovie.getTitle());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_POSTER_URI, mMovie.getPosterPath());
+        contentValues.put(FavoritesEntry.COLUMN_MOVIE_BACKDROP_URI, mMovie.getBackdropPath());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_OVERVIEW, mMovie.getOverview());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_VOTE_AVERAGE, mMovie.getVoteAverage());
         contentValues.put(FavoritesEntry.COLUMN_MOVIE_RELEASE_DATE, mMovie.getReleaseDate());
 
         getContentResolver().insert(FavoritesEntry.CONTENT_URI, contentValues);
 
-        if (NetworkUtils.isConnectedToInternet(getApplicationContext()) && mPosterUrl != null) {
-            Picasso.with(this)
-                    .load(mPosterUrl)
-                    .error(R.drawable.missing_image)
-                    .into(ImageUtils.picassoImageTarget(this,mImageFileName));
+        if (NetworkUtils.isConnectedToInternet(getApplicationContext())) {
+            if (mPosterUrl != null) {
+                Picasso.with(this)
+                        .load(mPosterUrl)
+                        .error(R.drawable.missing_image)
+                        .into(ImageUtils.picassoImageTarget(this, mPosterFileName));
+            }
+            if (mBackdropUrl != null) {
+                Picasso.with(this)
+                        .load(mBackdropUrl)
+                        .error(R.drawable.missing_image)
+                        .into(ImageUtils.picassoImageTarget(this, mBackdropFileName));
+            }
         }
 
         Snackbar insertionSnackbar =
@@ -232,7 +244,8 @@ public class MovieDetailActivity extends AppCompatActivity
     public void deleteFromFavoriteMovies() {
         getContentResolver()
                 .delete(mUri, FavoritesEntry.COLUMN_MOVIE_ID + "=" + mMovie.getId(), null);
-        ImageUtils.deleteImageFile(this,mImageFileName);
+        ImageUtils.deleteImageFile(this, mPosterFileName);
+        ImageUtils.deleteImageFile(this, mBackdropFileName);
         Snackbar deletionSnackbar =
                 Snackbar.make(coordinatorLayout,R.string.removed_from_favorites,Snackbar.LENGTH_SHORT);
         deletionSnackbar.show();
