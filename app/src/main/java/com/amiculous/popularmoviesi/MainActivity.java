@@ -169,7 +169,7 @@ public class MainActivity extends AppCompatActivity
         mGridLayoutManager = new GridLayoutManager(this, numberOfColumns);
         mMovieRecyclerView.setLayoutManager(mGridLayoutManager);
         mMovieRecyclerView.setAdapter(mAdapter);
-        if (movies.size() == 0 && mIsFavorites) {
+        if (movies != null && movies.size() == 0 && mIsFavorites) {
             mNoFavoritesText.setVisibility(View.VISIBLE);
             mMovieRecyclerView.setVisibility(View.GONE);
         } else {
